@@ -1,2 +1,1 @@
-# CineReserve The Movie Seat Scheduler
- 
+# CineReserve: The Movie Seat Scheduler
