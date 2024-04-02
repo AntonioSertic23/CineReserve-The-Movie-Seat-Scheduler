@@ -6,3 +6,7 @@ export const FIREBASE_CONFIG = {
   messagingSenderId: "",
   appId: "",
 };
+
+export const ADMIN_ID = "";
+
+export const TIMEOUT_SEC = 10;

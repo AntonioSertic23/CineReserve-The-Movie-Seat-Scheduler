@@ -1,4 +1,4 @@
-import { logIn, signUp } from "./firebase.js";
+import { logIn, signUp } from "../firebase.js";
 
 document.getElementById("loginButton").addEventListener("click", (event) => {
   event.preventDefault();
