@@ -2,12 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
 import { FIREBASE_CONFIG, ADMIN_ID, TIMEOUT_SEC } from "./config.js";
 
-// Initialize Firebase
+// Initialize Firebase with the provided configuration.
 initializeApp(FIREBASE_CONFIG);
 
-const auth = getAuth();
+// Get the authentication instance.
+const AUTH = getAuth();
 
-onAuthStateChanged(auth, async (user) => {
+// Check the authentication status and handle redirection if necessary.
+onAuthStateChanged(AUTH, async (user) => {
   try {
     if (user) {
       // If user is signed in, redirect to home page
@@ -27,10 +29,15 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+/**
+ * Function to log in a user with email and password.
+ * @param {string} email - User's email.
+ * @param {string} password - User's password.
+ */
 async function logIn(email, password) {
   try {
     console.log(email, password);
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(AUTH, email, password);
     const user = userCredential.user;
     console.log("User successfully logged in:", user);
   } catch (error) {
@@ -38,9 +45,14 @@ async function logIn(email, password) {
   }
 }
 
+/**
+ * Function to sign up a new user with email and password.
+ * @param {string} email - User's email.
+ * @param {string} password - User's password.
+ */
 async function signUp(email, password) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(AUTH, email, password);
     const user = userCredential.user;
     console.log("Signed up", user);
   } catch (error) {
@@ -48,15 +60,21 @@ async function signUp(email, password) {
   }
 }
 
+// Function to log out the current user.
 async function logOut() {
   try {
-    await signOut(auth);
+    await signOut(AUTH);
     console.log("Sign-out successful.");
   } catch (error) {
     console.error("An error occurred during sign-out:", error);
   }
 }
 
+/**
+ * A function that creates a promise to reject after a specified time period.
+ * @param {number} seconds - The time in seconds before the promise rejects.
+ * @returns {Promise} - A promise that rejects after the specified time.
+ */
 const timeout = (seconds) => {
   return new Promise((_, reject) => {
     setTimeout(() => {
@@ -65,21 +83,29 @@ const timeout = (seconds) => {
   });
 };
 
+/**
+ * A function that returns a promise resolving with the current user's ID, or waits for the user to be authenticated.
+ * @returns {Promise} - A promise resolving with the current user's ID.
+ */
 const getUserIDPromise = () => {
   return new Promise((resolve) => {
-    if (auth.currentUser !== null) {
-      resolve(auth.currentUser.uid);
+    if (AUTH.currentUser !== null) {
+      resolve(AUTH.currentUser.uid);
     } else {
       const interval = setInterval(() => {
-        if (auth.currentUser !== null) {
+        if (AUTH.currentUser !== null) {
           clearInterval(interval);
-          resolve(auth.currentUser.uid);
+          resolve(AUTH.currentUser.uid);
         }
       }, 500);
     }
   });
 };
 
+/**
+ * A function that determines the type of the logged-in user.
+ * @returns {Promise<string>} - A promise resolving with the type of the logged-in user ("admin" or "user").
+ */
 async function getLoggedInUserType() {
   try {
     const userId = await Promise.race([getUserIDPromise(), timeout(TIMEOUT_SEC)]);
