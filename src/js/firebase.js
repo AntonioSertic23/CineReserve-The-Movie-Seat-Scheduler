@@ -1,13 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
-import { FIREBASE_CONFIG } from "./config.js";
+import { FIREBASE_CONFIG, ADMIN_ID, TIMEOUT_SEC } from "./config.js";
 
 // Initialize Firebase
 initializeApp(FIREBASE_CONFIG);
 
 const auth = getAuth();
 
-// Check authentication status
 onAuthStateChanged(auth, async (user) => {
   try {
     if (user) {
@@ -16,8 +15,6 @@ onAuthStateChanged(auth, async (user) => {
         window.location.href = "/";
       }
       console.log("User is signed in");
-      const uid = user.uid;
-      console.log(uid);
     } else {
       // If user is not signed in, redirect to login page
       if (!window.location.pathname.endsWith("login.html")) {
@@ -30,7 +27,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Function for logging in
 async function logIn(email, password) {
   try {
     console.log(email, password);
@@ -42,7 +38,6 @@ async function logIn(email, password) {
   }
 }
 
-// Function for signing up
 async function signUp(email, password) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -53,7 +48,6 @@ async function signUp(email, password) {
   }
 }
 
-// Function for logging out
 async function logOut() {
   try {
     await signOut(auth);
@@ -63,4 +57,38 @@ async function logOut() {
   }
 }
 
-export { logIn, signUp, logOut };
+const timeout = (seconds) => {
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Request took too long! Timeout after ${seconds} second(s).`));
+    }, seconds * 1000);
+  });
+};
+
+const getUserIDPromise = () => {
+  return new Promise((resolve) => {
+    if (auth.currentUser !== null) {
+      resolve(auth.currentUser.uid);
+    } else {
+      const interval = setInterval(() => {
+        if (auth.currentUser !== null) {
+          clearInterval(interval);
+          resolve(auth.currentUser.uid);
+        }
+      }, 500);
+    }
+  });
+};
+
+async function getLoggedInUserType() {
+  try {
+    const userId = await Promise.race([getUserIDPromise(), timeout(TIMEOUT_SEC)]);
+    return userId === ADMIN_ID ? "admin" : "user";
+  } catch (error) {
+    // Handle timeout error or any other errors that might occur
+    console.error(error);
+    return "unknown"; // Return "unknown" in case of error
+  }
+}
+
+export { logIn, signUp, logOut, getLoggedInUserType };
