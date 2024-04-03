@@ -30,6 +30,32 @@ class TheaterView extends View {
     });
   }
 
+  addHandlerChangeMovie() {
+    const theaterchangeMovie = document.querySelectorAll(".theater-change-movie");
+
+    theaterchangeMovie.forEach((changeMovie) =>
+      changeMovie.addEventListener("click", (event) => {
+        const parentTheaterElement = event.target.closest(".theater");
+        const changeMovieForm = parentTheaterElement.querySelector("#change-movie-form");
+
+        changeMovieForm.style.display = "block";
+
+        const changeMovieTitle = parentTheaterElement.querySelector("#change-movie-title");
+        const changeMovieCancel = parentTheaterElement.querySelector("#change-movie-cancel");
+        const changeMovieChange = parentTheaterElement.querySelector("#change-movie-change");
+
+        changeMovieCancel.addEventListener("click", () => {
+          changeMovieTitle.value = "";
+          changeMovieForm.style.display = "none";
+        });
+
+        changeMovieChange.addEventListener("click", () => {
+          console.log(parentTheaterElement.dataset.theaterId);
+        });
+      })
+    );
+  }
+
   addHandlerAddMovie() {
     const theaterAddMovie = document.querySelectorAll(".theater-add-movie");
 
