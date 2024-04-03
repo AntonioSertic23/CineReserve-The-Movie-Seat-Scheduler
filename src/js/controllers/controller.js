@@ -14,6 +14,7 @@ const state = {
 if (userType === "admin") {
   theaterView.render(state.userType);
   theaterView.addHandlerAddTheater();
+  theaterView.addHandlerAddMovie();
 } else {
   theaterView.render(state.userType);
 }
