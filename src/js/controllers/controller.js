@@ -1,23 +1,27 @@
-import Model from "../model.js";
-import View from "../views/view.js";
-import { logOut, getLoggedInUserType } from "../firebase.js";
+import * as theaterModel from "../models/theaterModel.js";
+import * as userModel from "../models/userModel.js";
+import { logOut, getLoggedInUser } from "../firebase.js";
 import theaterView from "../views/theaterView.js";
 
-class Controller {}
+const user = await getLoggedInUser();
 
-const app = new Controller(new Model(), new View());
+if (user.type === "admin") {
+  // 1) Loading theater
+  await theaterModel.loadTheater();
+  console.log(theaterModel.state);
 
-const userType = await getLoggedInUserType();
-const state = {
-  userType: userType,
-};
-if (userType === "admin") {
-  theaterView.render(state.userType);
+  await userModel.loadUser(user);
+  console.log(userModel.state);
+
+  // 2) Rendering theater
+  theaterView.render(userModel.state, theaterModel.state);
+
+  // 3) Add handlers
   theaterView.addHandlerAddTheater();
   theaterView.addHandlerAddMovie();
   theaterView.addHandlerChangeMovie();
 } else {
-  theaterView.render(state.userType);
+  theaterView.render(theaterModel.state);
 }
 
 document.getElementById("logoutButton").addEventListener("click", () => {

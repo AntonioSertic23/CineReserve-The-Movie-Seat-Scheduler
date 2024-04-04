@@ -1,13 +1,10 @@
 export default class View {
-  _data;
+  _userData;
   _theaterData;
 
-  render(type) {
-    this._data = type;
-    this._theaterData = [
-      { id: 1, movie: "Shrek 3", rows: 4, columns: 7 },
-      { id: 2, movie: "-", rows: 3, columns: 6 },
-    ];
+  render(userData, theterData) {
+    this._userData = userData.user;
+    this._theaterData = theterData;
     const markup = this._generateMarkup();
 
     this._clear();

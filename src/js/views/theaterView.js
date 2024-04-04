@@ -97,11 +97,10 @@ class TheaterView extends View {
   }
 
   _generateMarkup() {
-    console.log(this._data);
     return `
       <div>
-        <h1>Welcome ${this._data}</h1>
-        ${this._data === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
+        <h1>Welcome ${this._userData.type}</h1>
+        ${this._userData.type === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
         <br>
         <br>
         <div id="add-theater-form" style="display: none">
