@@ -90,12 +90,12 @@ const timeout = (seconds) => {
 const getUserIDPromise = () => {
   return new Promise((resolve) => {
     if (AUTH.currentUser !== null) {
-      resolve(AUTH.currentUser.uid);
+      resolve(AUTH.currentUser);
     } else {
       const interval = setInterval(() => {
         if (AUTH.currentUser !== null) {
           clearInterval(interval);
-          resolve(AUTH.currentUser.uid);
+          resolve(AUTH.currentUser);
         }
       }, 500);
     }
@@ -106,10 +106,14 @@ const getUserIDPromise = () => {
  * A function that determines the type of the logged-in user.
  * @returns {Promise<string>} - A promise resolving with the type of the logged-in user ("admin" or "user").
  */
-async function getLoggedInUserType() {
+async function getLoggedInUser() {
   try {
-    const userId = await Promise.race([getUserIDPromise(), timeout(TIMEOUT_SEC)]);
-    return userId === ADMIN_ID ? "admin" : "user";
+    const currentUser = await Promise.race([getUserIDPromise(), timeout(TIMEOUT_SEC)]);
+    return {
+      email: currentUser.email,
+      uid: currentUser.uid,
+      type: currentUser.uid === ADMIN_ID ? "admin" : "user",
+    };
   } catch (error) {
     // Handle timeout error or any other errors that might occur
     console.error(error);
@@ -117,4 +121,4 @@ async function getLoggedInUserType() {
   }
 }
 
-export { logIn, signUp, logOut, getLoggedInUserType };
+export { logIn, signUp, logOut, getLoggedInUser };
