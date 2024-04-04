@@ -6,20 +6,15 @@ import theaterView from "../views/theaterView.js";
 const user = await getLoggedInUser();
 
 if (user.type === "admin") {
-  // 1) Loading theater
+  // 1) Loading theaters & users
   await theaterModel.loadTheater();
-  console.log(theaterModel.state);
-
   await userModel.loadUser(user);
+
+  console.log(theaterModel.state);
   console.log(userModel.state);
 
   // 2) Rendering theater
   theaterView.render(userModel.state, theaterModel.state);
-
-  // 3) Add handlers
-  theaterView.addHandlerAddTheater();
-  theaterView.addHandlerAddMovie();
-  theaterView.addHandlerChangeMovie();
 } else {
   theaterView.render(theaterModel.state);
 }

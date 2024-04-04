@@ -83,6 +83,32 @@ class TheaterView extends View {
     );
   }
 
+  addHandlerEditTheater() {
+    const theaterEditTheater = document.querySelectorAll(".theater-edit-theater");
+
+    theaterEditTheater.forEach((editTheater) =>
+      editTheater.addEventListener("click", (event) => {
+        // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
+        console.log("edit");
+      })
+    );
+  }
+
+  addHandlerDeleteTheater() {
+    const theaterDeleteTheater = document.querySelectorAll(".theater-delete-theater");
+
+    theaterDeleteTheater.forEach((deleteTheater) =>
+      deleteTheater.addEventListener("click", (event) => {
+        // TODO: Create Yes and No buttons. Clicking Yes deletes the theater, while clicking No hides both buttons.
+        console.log("delete");
+      })
+    );
+  }
+
+  addHandlerEditSeats() {}
+
+  addHandlerBookSeats() {}
+
   _createNewTheater(rows, columns) {
     return `
       <div class="theater">
