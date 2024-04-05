@@ -78,12 +78,12 @@ class TheaterView {
           const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
 
           const theater = this._theaterData.find((theater) => theater.id === theaterId);
-          theater.movie = addMovieTitle.value;
+          theater.movie = addMovieTitle;
 
           const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
 
           // TODO: Change the button from "Add Movie" to "Change Movie". Maybe create a function to handle this.
-          movieName.textContent = addMovieTitle.value;
+          movieName.textContent = addMovieTitle;
         } catch (error) {
           console.log("The user has canceled the modal or an error has occurred.");
         }
