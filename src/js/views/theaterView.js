@@ -63,7 +63,6 @@ class TheaterView {
     theaterAddMovie.forEach((addMovie) =>
       addMovie.addEventListener("click", async (event) => {
         const parentTheaterElement = event.target.closest(".theater");
-        const addMovieForm = parentTheaterElement.querySelector("#add-movie-form");
 
         const addMovieModalContent = `
         <div id='add-movie-form'>
@@ -93,27 +92,35 @@ class TheaterView {
   }
 
   addHandlerChangeMovie() {
-    const theaterchangeMovie = document.querySelectorAll(".theater-change-movie");
+    const theaterChangeMovie = document.querySelectorAll(".theater-change-movie");
 
-    theaterchangeMovie.forEach((changeMovie) =>
-      changeMovie.addEventListener("click", (event) => {
+    theaterChangeMovie.forEach((changeMovie) =>
+      changeMovie.addEventListener("click", async (event) => {
         const parentTheaterElement = event.target.closest(".theater");
-        const changeMovieForm = parentTheaterElement.querySelector("#change-movie-form");
 
-        changeMovieForm.style.display = "block";
+        const changeMovieModalContent = `
+        <div id='change-movie-form'>
+          <input id='change-movie-title' type='text'>
+        </div>
+        `;
 
-        const changeMovieTitle = parentTheaterElement.querySelector("#change-movie-title");
-        const changeMovieCancel = parentTheaterElement.querySelector("#change-movie-cancel");
-        const changeMovieChange = parentTheaterElement.querySelector("#change-movie-change");
+        try {
+          await openModal("Change Movie", changeMovieModalContent);
 
-        changeMovieCancel.addEventListener("click", () => {
-          changeMovieTitle.value = "";
-          changeMovieForm.style.display = "none";
-        });
+          const modalBody = document.getElementById("modalBody");
+          const changeMovieTitle = modalBody.querySelector("#change-movie-title").value;
+          const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
 
-        changeMovieChange.addEventListener("click", () => {
-          console.log(parentTheaterElement.dataset.theaterId);
-        });
+          const theater = this._theaterData.find((theater) => theater.id === theaterId);
+          theater.movie = changeMovieTitle;
+
+          const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
+
+          // TODO: Add trim() and set the value to "-" if it's empty, and change from "Change Movie" to "Add Movie".
+          movieName.textContent = changeMovieTitle;
+        } catch (error) {
+          console.log("The user has canceled the modal or an error has occurred.");
+        }
       })
     );
   }
@@ -176,12 +183,6 @@ class TheaterView {
         ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
-
-        ${
-          theater.movie != "-"
-            ? "<div id='change-movie-form' style='display: none'><br><input id='change-movie-title' type='text'><button id='change-movie-cancel'>Cancel</button><button id='change-movie-change'>Save</button></div>"
-            : "<div id='add-movie-form' style='display: none'><br><input id='add-movie-title' type='text'><button id='add-movie-cancel'>Cancel</button><button id='add-movie-add'>Add</button></div>"
-        }
       </div>
       <hr>`;
   }
