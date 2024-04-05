@@ -10,9 +10,6 @@ if (user.type === "admin") {
   await theaterModel.loadTheater();
   await userModel.loadUser(user);
 
-  console.log(theaterModel.state);
-  console.log(userModel.state);
-
   // 2) Rendering theater
   theaterView.render(userModel.state, theaterModel.state);
 } else {

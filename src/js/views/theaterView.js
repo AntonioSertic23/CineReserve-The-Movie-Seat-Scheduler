@@ -1,4 +1,5 @@
 import View from "./view.js";
+import { openModal } from "./modal.js";
 
 class TheaterView extends View {
   _parentElement = document.querySelector(".container");
@@ -6,27 +7,28 @@ class TheaterView extends View {
   addHandlerAddTheater() {
     const allTheaters = document.getElementById("all-theaters");
     const addTheaterButton = document.getElementById("add-theater-button");
-    const addTheaterForm = document.getElementById("add-theater-form");
-    const addTheaterRows = document.getElementById("add-theater-rows");
-    const addTheaterColumns = document.getElementById("add-theater-columns");
-    const addTheaterCancel = document.getElementById("add-theater-cancel");
-    const addTheaterCreate = document.getElementById("add-theater-create");
 
-    addTheaterButton.addEventListener("click", () => {
-      addTheaterForm.style.display = "block";
-    });
+    addTheaterButton.addEventListener("click", async () => {
+      // TODO: Create a theater layout generated from buttons for each seat in it, based on the number of rows and columns entered by the user.
+      const editMovieModalContent = `
+      <div id="add-theater-form">
+        <input id="add-theater-rows" type="number">
+        <input id="add-theater-columns" type="number">
+      </div>
+      `;
 
-    addTheaterCancel.addEventListener("click", () => {
-      addTheaterRows.value = "";
-      addTheaterColumns.value = "";
-      addTheaterForm.style.display = "none";
-    });
+      try {
+        await openModal("Uredi film", editMovieModalContent);
 
-    addTheaterCreate.addEventListener("click", () => {
-      console.log("Rows:", addTheaterRows.value);
-      console.log("Columns:", addTheaterColumns.value);
+        const modalBody = document.getElementById("modalBody");
+        const addTheaterRows = modalBody.querySelector("#add-theater-rows").value;
+        const addTheaterColumns = modalBody.querySelector("#add-theater-columns").value;
+        const nextTheaterId = this._theaterData.at(-1).id + 1;
 
-      allTheaters.insertAdjacentHTML("beforeend", this._createNewTheater(addTheaterRows.value, addTheaterColumns.value));
+        allTheaters.insertAdjacentHTML("beforeend", this._createNewTheater(addTheaterRows, addTheaterColumns, nextTheaterId));
+      } catch (error) {
+        console.log("Korisnik je odustao od modala ili se dogodila greška");
+      }
     });
   }
 
@@ -65,7 +67,6 @@ class TheaterView extends View {
         const addMovieForm = parentTheaterElement.querySelector("#add-movie-form");
 
         addMovieForm.style.display = "block";
-        console.log(addMovieForm);
 
         const addMovieTitle = parentTheaterElement.querySelector("#add-movie-title");
         const addMovieCancel = parentTheaterElement.querySelector("#add-movie-cancel");
@@ -77,7 +78,16 @@ class TheaterView extends View {
         });
 
         addMovieAdd.addEventListener("click", () => {
-          console.log(parentTheaterElement.dataset.theaterId);
+          const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+
+          const theater = this._theaterData.find((theater) => theater.id === theaterId);
+          theater.movie = addMovieTitle.value;
+
+          const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
+          movieName.textContent = addMovieTitle.value;
+
+          addMovieTitle.value = "";
+          addMovieForm.style.display = "none";
         });
       })
     );
@@ -109,10 +119,10 @@ class TheaterView extends View {
 
   addHandlerBookSeats() {}
 
-  _createNewTheater(rows, columns) {
+  _createNewTheater(rows, columns, theaterId) {
     return `
       <div class="theater">
-        <p>Movie: <b>-</b></p>
+        <p>Movie: <b id="movieName-${theaterId}">-</b></p>
         <p>Rows: ${rows}</p>
         <p>Columns: ${columns}</p>
         <button class="theater-add-movie">Add Movie</button>
@@ -148,7 +158,7 @@ class TheaterView extends View {
   _generateMarkupTheater(theater) {
     return `
       <div class="theater" data-theater-id="${theater.id}">
-        <p>Movie: <b>${theater.movie}</b></p>
+        <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
         <p>Rows: ${theater.rows}</p>
         <p>Columns: ${theater.columns}</p>
         ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}

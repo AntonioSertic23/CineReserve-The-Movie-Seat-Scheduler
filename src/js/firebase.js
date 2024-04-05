@@ -36,7 +36,6 @@ onAuthStateChanged(AUTH, async (user) => {
  */
 async function logIn(email, password) {
   try {
-    console.log(email, password);
     const userCredential = await signInWithEmailAndPassword(AUTH, email, password);
     const user = userCredential.user;
     console.log("User successfully logged in:", user);
