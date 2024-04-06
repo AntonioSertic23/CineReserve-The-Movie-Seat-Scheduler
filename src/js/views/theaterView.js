@@ -97,7 +97,7 @@ class TheaterView {
 
         const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
 
-        // Remove previous event listener and add a new one for confirm button
+        // Remove previous event listener and add a new one
         const addMovieButton = parentTheaterElement.querySelector(".theater-add-movie");
         const newAddMovieButton = addMovieButton.cloneNode(true);
         addMovieButton.parentNode.replaceChild(newAddMovieButton, addMovieButton);
