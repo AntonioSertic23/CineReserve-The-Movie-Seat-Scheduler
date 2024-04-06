@@ -12,6 +12,7 @@ class TheaterView {
     this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", this._generateMarkup());
 
+    // TODO: Move this to theaterController so actions can be managed from there, as updateTheaterState can then be called from there to update the global state, rather than updating _theaterData here.
     if (this._userData.type === "admin") {
       this.addHandlerAddTheater();
 
@@ -42,7 +43,7 @@ class TheaterView {
 
     addTheaterButton.addEventListener("click", async () => {
       // TODO: Create a theater layout generated from buttons for each seat in it, based on the number of rows and columns entered by the user.
-      const eaddTheaterModalContent = `
+      const addTheaterModalContent = `
       <div id="add-theater-form">
         <input id="add-theater-rows" type="number">
         <input id="add-theater-columns" type="number">
@@ -50,7 +51,7 @@ class TheaterView {
       `;
 
       try {
-        await openModal("Add Theater", eaddTheaterModalContent);
+        await openModal("Add Theater", addTheaterModalContent);
 
         const modalBody = document.getElementById("modalBody");
         const addTheaterRows = modalBody.querySelector("#add-theater-rows").value;
@@ -144,8 +145,39 @@ class TheaterView {
   }
 
   addHandlerEditTheater(theater) {
-    theater.addEventListener("click", (event) => {
+    theater.addEventListener("click", async (event) => {
+      const parentTheaterElement = event.target.closest(".theater");
+
       // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
+      const editTheaterModalContent = `
+      <div id="edit-theater-form">
+        <input id="edit-theater-rows" type="number">
+        <input id="edit-theater-columns" type="number">
+      </div>
+      `;
+
+      try {
+        await openModal("Edit Theater", editTheaterModalContent);
+
+        const modalBody = document.getElementById("modalBody");
+        const editTheaterRows = modalBody.querySelector("#edit-theater-rows").value;
+        const editTheaterColumns = modalBody.querySelector("#edit-theater-columns").value;
+
+        const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+
+        const theater = this._theaterData.find((theater) => theater.id === theaterId);
+        theater.rows = editTheaterRows;
+        theater.columns = editTheaterColumns;
+
+        const theaterRows = parentTheaterElement.querySelector(`#theaterRows-${theaterId}`);
+        const theaterColumns = parentTheaterElement.querySelector(`#theaterColumns-${theaterId}`);
+
+        // TODO: Add trim() and set the value to "-" if it's empty, and change from "Change Movie" to "Add Movie".
+        theaterRows.textContent = editTheaterRows;
+        theaterColumns.textContent = editTheaterColumns;
+      } catch (error) {
+        console.log("An error has occurred.", error);
+      }
       console.log("edit");
     });
   }
@@ -188,8 +220,8 @@ class TheaterView {
     return `
       <div class="theater" data-theater-id="${theater.id}">
         <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
-        <p>Rows: ${theater.rows}</p>
-        <p>Columns: ${theater.columns}</p>
+        <p>Movie: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
+        <p>Movie: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
         ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
@@ -201,8 +233,8 @@ class TheaterView {
     return `
       <div class="theater" data-theater-id="${theaterId}">
         <p>Movie: <b id="movieName-${theaterId}">-</b></p>
-        <p>Rows: ${rows}</p>
-        <p>Columns: ${columns}</p>
+        <p>Rows: <b id="theaterRows-${theaterId}">${rows}</b></p>
+        <p>Rows: <b id="theaterColumns-${theaterId}">${columns}</b></p>
         <button class="theater-add-movie">Add Movie</button>
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
