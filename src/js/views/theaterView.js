@@ -14,10 +14,18 @@ class TheaterView {
 
     if (this._userData.type === "admin") {
       this.addHandlerAddTheater();
-      this.addHandlerAddMovie();
-      this.addHandlerChangeMovie();
-      this.addHandlerEditTheater();
-      this.addHandlerDeleteTheater();
+
+      const theaterAddMovie = document.querySelectorAll(".theater-add-movie");
+      theaterAddMovie.forEach((movie) => this.addHandlerAddMovie(movie));
+
+      const theaterChangeMovie = document.querySelectorAll(".theater-change-movie");
+      theaterChangeMovie.forEach((movie) => this.addHandlerChangeMovie(movie));
+
+      const theaterEditTheater = document.querySelectorAll(".theater-edit-theater");
+      theaterEditTheater.forEach((theater) => this.addHandlerEditTheater(theater));
+
+      const theaterDeleteTheater = document.querySelectorAll(".theater-delete-theater");
+      theaterDeleteTheater.forEach((theater) => this.addHandlerDeleteTheater(theater));
     } else {
       this.addHandlerEditSeats();
       this.addHandlerBookSeats();
@@ -49,8 +57,86 @@ class TheaterView {
         const addTheaterColumns = modalBody.querySelector("#add-theater-columns").value;
         const nextTheaterId = this._theaterData.at(-1).id + 1;
 
+        this._theaterData.push({ id: nextTheaterId, movie: "-", rows: addTheaterRows, columns: addTheaterColumns });
+
         allTheaters.insertAdjacentHTML("beforeend", this._createNewTheater(addTheaterRows, addTheaterColumns, nextTheaterId));
-        // TODO: Also add event listeners for the buttons on that new element.
+
+        const newTheater = allTheaters.querySelector(`[data-theater-id="${nextTheaterId}"]`);
+        const addMovieButton = newTheater.querySelector(".theater-add-movie");
+        this.addHandlerAddMovie(addMovieButton);
+        const editTheaterButton = newTheater.querySelector(".theater-edit-theater");
+        this.addHandlerEditTheater(editTheaterButton);
+        const deleteTheaterButton = newTheater.querySelector(".theater-delete-theater");
+        this.addHandlerDeleteTheater(deleteTheaterButton);
+      } catch (error) {
+        console.log("An error has occurred.", error);
+      }
+    });
+  }
+
+  addHandlerAddMovie(movie) {
+    movie.addEventListener("click", async (event) => {
+      const parentTheaterElement = event.target.closest(".theater");
+
+      const addMovieModalContent = `
+      <div id='add-movie-form'>
+        <input id='add-movie-title' type='text'>
+      </div>
+      `;
+
+      try {
+        await openModal("Add Movie", addMovieModalContent);
+
+        const modalBody = document.getElementById("modalBody");
+        const addMovieTitle = modalBody.querySelector("#add-movie-title").value;
+        const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+
+        const theater = this._theaterData.find((theater) => theater.id === theaterId);
+        theater.movie = addMovieTitle;
+
+        const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
+
+        // Remove previous event listener and add a new one for confirm button
+        const addMovieButton = parentTheaterElement.querySelector(".theater-add-movie");
+        const newAddMovieButton = addMovieButton.cloneNode(true);
+        addMovieButton.parentNode.replaceChild(newAddMovieButton, addMovieButton);
+        this.addHandlerChangeMovie(newAddMovieButton);
+
+        newAddMovieButton.classList.remove("theater-add-movie");
+        newAddMovieButton.classList.add("theater-change-movie");
+        newAddMovieButton.textContent = "Change Movie";
+
+        movieName.textContent = addMovieTitle;
+      } catch (error) {
+        console.log("An error has occurred.", error);
+      }
+    });
+  }
+
+  addHandlerChangeMovie(movie) {
+    movie.addEventListener("click", async (event) => {
+      const parentTheaterElement = event.target.closest(".theater");
+
+      const changeMovieModalContent = `
+        <div id='change-movie-form'>
+          <input id='change-movie-title' type='text'>
+        </div>
+        `;
+
+      try {
+        await openModal("Change Movie", changeMovieModalContent);
+
+        const modalBody = document.getElementById("modalBody");
+        const changeMovieTitle = modalBody.querySelector("#change-movie-title").value;
+        const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+
+        const theater = this._theaterData.find((theater) => theater.id === theaterId);
+        theater.movie = changeMovieTitle;
+
+        const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
+
+        // TODO: Add trim() and set the value to "-" if it's empty, and change from "Change Movie" to "Add Movie".
+        movieName.textContent = changeMovieTitle;
       } catch (error) {
         console.log("The user has canceled the modal or an error has occurred.");
       }
@@ -91,60 +177,18 @@ class TheaterView {
     );
   }
 
-  addHandlerChangeMovie() {
-    const theaterChangeMovie = document.querySelectorAll(".theater-change-movie");
-
-    theaterChangeMovie.forEach((changeMovie) =>
-      changeMovie.addEventListener("click", async (event) => {
-        const parentTheaterElement = event.target.closest(".theater");
-
-        const changeMovieModalContent = `
-        <div id='change-movie-form'>
-          <input id='change-movie-title' type='text'>
-        </div>
-        `;
-
-        try {
-          await openModal("Change Movie", changeMovieModalContent);
-
-          const modalBody = document.getElementById("modalBody");
-          const changeMovieTitle = modalBody.querySelector("#change-movie-title").value;
-          const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
-
-          const theater = this._theaterData.find((theater) => theater.id === theaterId);
-          theater.movie = changeMovieTitle;
-
-          const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
-
-          // TODO: Add trim() and set the value to "-" if it's empty, and change from "Change Movie" to "Add Movie".
-          movieName.textContent = changeMovieTitle;
-        } catch (error) {
-          console.log("The user has canceled the modal or an error has occurred.");
-        }
-      })
-    );
+  addHandlerEditTheater(theater) {
+    theater.addEventListener("click", (event) => {
+      // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
+      console.log("edit");
+    });
   }
 
-  addHandlerEditTheater() {
-    const theaterEditTheater = document.querySelectorAll(".theater-edit-theater");
-
-    theaterEditTheater.forEach((editTheater) =>
-      editTheater.addEventListener("click", (event) => {
-        // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
-        console.log("edit");
-      })
-    );
-  }
-
-  addHandlerDeleteTheater() {
-    const theaterDeleteTheater = document.querySelectorAll(".theater-delete-theater");
-
-    theaterDeleteTheater.forEach((deleteTheater) =>
-      deleteTheater.addEventListener("click", (event) => {
-        // TODO: Create Yes and No buttons. Clicking Yes deletes the theater, while clicking No hides both buttons.
-        console.log("delete");
-      })
-    );
+  addHandlerDeleteTheater(theater) {
+    theater.addEventListener("click", (event) => {
+      // TODO: Create Yes and No buttons. Clicking Yes deletes the theater, while clicking No hides both buttons.
+      console.log("delete");
+    });
   }
 
   addHandlerEditSeats() {}
@@ -189,7 +233,7 @@ class TheaterView {
 
   _createNewTheater(rows, columns, theaterId) {
     return `
-      <div class="theater">
+      <div class="theater" data-theater-id="${theaterId}">
         <p>Movie: <b id="movieName-${theaterId}">-</b></p>
         <p>Rows: ${rows}</p>
         <p>Columns: ${columns}</p>
