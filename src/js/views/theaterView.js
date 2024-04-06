@@ -143,40 +143,6 @@ class TheaterView {
     });
   }
 
-  addHandlerAddMovie() {
-    const theaterAddMovie = document.querySelectorAll(".theater-add-movie");
-
-    theaterAddMovie.forEach((addMovie) =>
-      addMovie.addEventListener("click", async (event) => {
-        const parentTheaterElement = event.target.closest(".theater");
-
-        const addMovieModalContent = `
-        <div id='add-movie-form'>
-          <input id='add-movie-title' type='text'>
-        </div>
-        `;
-
-        try {
-          await openModal("Add Movie", addMovieModalContent);
-
-          const modalBody = document.getElementById("modalBody");
-          const addMovieTitle = modalBody.querySelector("#add-movie-title").value;
-          const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
-
-          const theater = this._theaterData.find((theater) => theater.id === theaterId);
-          theater.movie = addMovieTitle.value;
-
-          const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
-
-          // TODO: Change the button from "Add Movie" to "Change Movie". Maybe create a function to handle this.
-          movieName.textContent = addMovieTitle.value;
-        } catch (error) {
-          console.log("The user has canceled the modal or an error has occurred.");
-        }
-      })
-    );
-  }
-
   addHandlerEditTheater(theater) {
     theater.addEventListener("click", (event) => {
       // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
