@@ -1,4 +1,5 @@
 import { openModal } from "./modal.js";
+import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../config.js";
 
 class TheaterView {
   _parentElement = document.querySelector(".container");
@@ -42,21 +43,24 @@ class TheaterView {
     const addTheaterButton = document.getElementById("add-theater-button");
 
     addTheaterButton.addEventListener("click", async () => {
-      // TODO: Create a theater layout generated from buttons for each seat in it, based on the number of rows and columns entered by the user.
       const addTheaterModalContent = `
       <div id="add-theater-form">
-        <input id="add-theater-rows" type="number">
-        <input id="add-theater-columns" type="number">
+        <label for="theater-rows">Rows:</label>
+        <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
+        <label for="theater-columns">Columns:</label>
+        <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
+        <br><br>
+        <div id="theater-container"></div>
       </div>
       `;
 
       try {
-        await openModal("Add Theater", addTheaterModalContent);
+        await openModal("Add Theater", addTheaterModalContent, true);
 
         const modalBody = document.getElementById("modalBody");
-        const addTheaterRows = modalBody.querySelector("#add-theater-rows").value;
-        const addTheaterColumns = modalBody.querySelector("#add-theater-columns").value;
-        const nextTheaterId = this._theaterData.at(-1).id + 1;
+        const addTheaterRows = modalBody.querySelector("#theater-rows").value;
+        const addTheaterColumns = modalBody.querySelector("#theater-columns").value;
+        const nextTheaterId = this._theaterData.at(-1) ? this._theaterData.at(-1).id + 1 : 1;
 
         this._theaterData.push({ id: nextTheaterId, movie: "-", rows: addTheaterRows, columns: addTheaterColumns });
 
@@ -150,20 +154,23 @@ class TheaterView {
       const theaterRows = parentTheaterElement.querySelector(`#theaterRows-${theaterId}`);
       const theaterColumns = parentTheaterElement.querySelector(`#theaterColumns-${theaterId}`);
 
-      // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
       const editTheaterModalContent = `
       <div id="edit-theater-form">
-        <input id="edit-theater-rows" type="number" value="${parseInt(theaterRows.textContent)}">
-        <input id="edit-theater-columns" type="number" value="${parseInt(theaterColumns.textContent)}">
+        <label for="theater-rows">Rows:</label>
+        <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterRows.textContent)}">
+        <label for="theater-columns">Columns:</label>
+        <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterColumns.textContent)}">
+        <br><br>
+        <div id="theater-container"></div>
       </div>
       `;
 
       try {
-        await openModal("Edit Theater", editTheaterModalContent);
+        await openModal("Edit Theater", editTheaterModalContent, true);
 
         const modalBody = document.getElementById("modalBody");
-        const editTheaterRows = modalBody.querySelector("#edit-theater-rows").value;
-        const editTheaterColumns = modalBody.querySelector("#edit-theater-columns").value;
+        const editTheaterRows = modalBody.querySelector("#theater-rows").value;
+        const editTheaterColumns = modalBody.querySelector("#theater-columns").value;
 
         const theater = this._theaterData.find((theater) => theater.id === theaterId);
         theater.rows = editTheaterRows;
