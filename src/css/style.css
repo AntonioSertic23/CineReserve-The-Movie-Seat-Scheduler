@@ -14,9 +14,10 @@
 
 .modal {
   background-color: white;
-  margin: 10% auto;
+  margin: 6% auto;
   padding: 20px;
   width: 50%;
+  border-radius: 5px;
 }
 
 .modal-header {
@@ -46,4 +47,72 @@
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+}
+
+/********************* GLOBAL *********************/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+p,
+button,
+input,
+span,
+label {
+  font-family: "Exo 2", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #eee;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  padding-left: 50px;
+  padding-right: 50px;
+  border: 2px dashed black;
+  box-shadow: 5px 10px 8px 10px #888888;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.welcome-header {
+  text-align: center;
+}
+
+.all-theaters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#all-theaters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+#all-theaters .theater {
+  border: 2px dashed black;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #eee;
 }

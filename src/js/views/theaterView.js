@@ -1,4 +1,5 @@
 import { openModal } from "./modal.js";
+import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../config.js";
 
 class TheaterView {
   _parentElement = document.querySelector(".container");
@@ -42,21 +43,39 @@ class TheaterView {
     const addTheaterButton = document.getElementById("add-theater-button");
 
     addTheaterButton.addEventListener("click", async () => {
-      // TODO: Create a theater layout generated from buttons for each seat in it, based on the number of rows and columns entered by the user.
       const addTheaterModalContent = `
       <div id="add-theater-form">
-        <input id="add-theater-rows" type="number">
-        <input id="add-theater-columns" type="number">
+        <label for="theater-rows">Rows:</label>
+        <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
+        <label for="theater-columns">Columns:</label>
+        <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
+        <div class="parent-container">
+        <ul class="showcase">
+          <li>
+            <div class="seat"> </div>
+            <p>N/A</p>
+          </li>
+          <li>
+            <div class="seat selected"> </div>
+            <p>Selected</p>
+          </li>
+          <li>
+            <div class="seat occupied"> </div>
+            <p>Occupied</p>
+          </li>
+        </ul>
+          <div id="theater-container"></div>
+        <div>
       </div>
       `;
 
       try {
-        await openModal("Add Theater", addTheaterModalContent);
+        await openModal("Add Theater", addTheaterModalContent, true);
 
         const modalBody = document.getElementById("modalBody");
-        const addTheaterRows = modalBody.querySelector("#add-theater-rows").value;
-        const addTheaterColumns = modalBody.querySelector("#add-theater-columns").value;
-        const nextTheaterId = this._theaterData.at(-1).id + 1;
+        const addTheaterRows = modalBody.querySelector("#theater-rows").value;
+        const addTheaterColumns = modalBody.querySelector("#theater-columns").value;
+        const nextTheaterId = this._theaterData.at(-1) ? this._theaterData.at(-1).id + 1 : 1;
 
         this._theaterData.push({ id: nextTheaterId, movie: "-", rows: addTheaterRows, columns: addTheaterColumns });
 
@@ -150,20 +169,38 @@ class TheaterView {
       const theaterRows = parentTheaterElement.querySelector(`#theaterRows-${theaterId}`);
       const theaterColumns = parentTheaterElement.querySelector(`#theaterColumns-${theaterId}`);
 
-      // TODO: Create a form similar to the one for creating a new theater, pre-filled with existing values. Upon clicking the Save button, save the changes.
       const editTheaterModalContent = `
       <div id="edit-theater-form">
-        <input id="edit-theater-rows" type="number" value="${parseInt(theaterRows.textContent)}">
-        <input id="edit-theater-columns" type="number" value="${parseInt(theaterColumns.textContent)}">
+        <label for="theater-rows">Rows:</label>
+        <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterRows.textContent)}">
+        <label for="theater-columns">Columns:</label>
+        <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterColumns.textContent)}">
+        <div class="parent-container">
+        <ul class="showcase">
+          <li>
+            <div class="seat"> </div>
+            <p>N/A</p>
+          </li>
+          <li>
+            <div class="seat selected"> </div>
+            <p>Selected</p>
+          </li>
+          <li>
+            <div class="seat occupied"> </div>
+            <p>Occupied</p>
+          </li>
+        </ul>
+          <div id="theater-container"></div>
+        <div>
       </div>
       `;
 
       try {
-        await openModal("Edit Theater", editTheaterModalContent);
+        await openModal("Edit Theater", editTheaterModalContent, true);
 
         const modalBody = document.getElementById("modalBody");
-        const editTheaterRows = modalBody.querySelector("#edit-theater-rows").value;
-        const editTheaterColumns = modalBody.querySelector("#edit-theater-columns").value;
+        const editTheaterRows = modalBody.querySelector("#theater-rows").value;
+        const editTheaterColumns = modalBody.querySelector("#theater-columns").value;
 
         const theater = this._theaterData.find((theater) => theater.id === theaterId);
         theater.rows = editTheaterRows;
@@ -197,9 +234,7 @@ class TheaterView {
 
         const allTheaters = document.getElementById("all-theaters");
         const theaterElement = allTheaters.querySelector(`[data-theater-id="${theaterId}"]`);
-        const hrElement = theaterElement.nextElementSibling;
         theaterElement.remove();
-        hrElement.remove();
       } catch (error) {
         console.log("An error has occurred.", error);
       }
@@ -213,20 +248,12 @@ class TheaterView {
   _generateMarkup() {
     return `
       <div>
-        <h1>Welcome ${this._userData.type}</h1>
-        ${this._userData.type === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
-        <br>
-        <br>
-        <div id="add-theater-form" style="display: none">
-          <input id="add-theater-rows" type="number">
-          <input id="add-theater-columns" type="number">
-          <button id="add-theater-cancel">Cancel</button>
-          <button id="add-theater-create">Create</button>
+        <h1 class="welcome-header">Welcome ${this._userData.type}</h1>
+        <div class="all-theaters-header">
+          <h2>All Theaters</h2>
+          ${this._userData.type === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
         </div>
-        <br><br>
         <div id="all-theaters">
-          <h4>All Theaters</h4>
-          <hr>
           ${this._theaterData.map(this._generateMarkupTheater).join("")}
         </div>
         <br><br>
@@ -237,13 +264,13 @@ class TheaterView {
     return `
       <div class="theater" data-theater-id="${theater.id}">
         <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
-        <p>Movie: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
-        <p>Movie: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
+        <p>Rows: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
+        <p>Columns: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
         ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
       </div>
-      <hr>`;
+      `;
   }
 
   _createNewTheater(rows, columns, theaterId) {
@@ -251,12 +278,12 @@ class TheaterView {
       <div class="theater" data-theater-id="${theaterId}">
         <p>Movie: <b id="movieName-${theaterId}">-</b></p>
         <p>Rows: <b id="theaterRows-${theaterId}">${rows}</b></p>
-        <p>Rows: <b id="theaterColumns-${theaterId}">${columns}</b></p>
+        <p>Columns: <b id="theaterColumns-${theaterId}">${columns}</b></p>
         <button class="theater-add-movie">Add Movie</button>
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
       </div>
-      <hr>`;
+      `;
   }
 }
 
