@@ -204,9 +204,7 @@ class TheaterView {
 
         const allTheaters = document.getElementById("all-theaters");
         const theaterElement = allTheaters.querySelector(`[data-theater-id="${theaterId}"]`);
-        const hrElement = theaterElement.nextElementSibling;
         theaterElement.remove();
-        hrElement.remove();
       } catch (error) {
         console.log("An error has occurred.", error);
       }
@@ -220,20 +218,12 @@ class TheaterView {
   _generateMarkup() {
     return `
       <div>
-        <h1>Welcome ${this._userData.type}</h1>
-        ${this._userData.type === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
-        <br>
-        <br>
-        <div id="add-theater-form" style="display: none">
-          <input id="add-theater-rows" type="number">
-          <input id="add-theater-columns" type="number">
-          <button id="add-theater-cancel">Cancel</button>
-          <button id="add-theater-create">Create</button>
+        <h1 class="welcome-header">Welcome ${this._userData.type}</h1>
+        <div class="all-theaters-header">
+          <h2>All Theaters</h2>
+          ${this._userData.type === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
         </div>
-        <br><br>
         <div id="all-theaters">
-          <h4>All Theaters</h4>
-          <hr>
           ${this._theaterData.map(this._generateMarkupTheater).join("")}
         </div>
         <br><br>
@@ -244,13 +234,13 @@ class TheaterView {
     return `
       <div class="theater" data-theater-id="${theater.id}">
         <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
-        <p>Movie: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
-        <p>Movie: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
+        <p>Rows: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
+        <p>Columns: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
         ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
       </div>
-      <hr>`;
+      `;
   }
 
   _createNewTheater(rows, columns, theaterId) {
@@ -258,12 +248,12 @@ class TheaterView {
       <div class="theater" data-theater-id="${theaterId}">
         <p>Movie: <b id="movieName-${theaterId}">-</b></p>
         <p>Rows: <b id="theaterRows-${theaterId}">${rows}</b></p>
-        <p>Rows: <b id="theaterColumns-${theaterId}">${columns}</b></p>
+        <p>Columns: <b id="theaterColumns-${theaterId}">${columns}</b></p>
         <button class="theater-add-movie">Add Movie</button>
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
       </div>
-      <hr>`;
+      `;
   }
 }
 
