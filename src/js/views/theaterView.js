@@ -49,8 +49,23 @@ class TheaterView {
         <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
         <label for="theater-columns">Columns:</label>
         <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}">
-        <br><br>
-        <div id="theater-container"></div>
+        <div class="parent-container">
+        <ul class="showcase">
+          <li>
+            <div class="seat"> </div>
+            <p>N/A</p>
+          </li>
+          <li>
+            <div class="seat selected"> </div>
+            <p>Selected</p>
+          </li>
+          <li>
+            <div class="seat occupied"> </div>
+            <p>Occupied</p>
+          </li>
+        </ul>
+          <div id="theater-container"></div>
+        <div>
       </div>
       `;
 
@@ -160,8 +175,23 @@ class TheaterView {
         <input id="theater-rows" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterRows.textContent)}">
         <label for="theater-columns">Columns:</label>
         <input id="theater-columns" type="number" min="${MIN_ROWS_COLUMNS}" max="${MAX_ROWS_COLUMNS}" value="${parseInt(theaterColumns.textContent)}">
-        <br><br>
-        <div id="theater-container"></div>
+        <div class="parent-container">
+        <ul class="showcase">
+          <li>
+            <div class="seat"> </div>
+            <p>N/A</p>
+          </li>
+          <li>
+            <div class="seat selected"> </div>
+            <p>Selected</p>
+          </li>
+          <li>
+            <div class="seat occupied"> </div>
+            <p>Occupied</p>
+          </li>
+        </ul>
+          <div id="theater-container"></div>
+        <div>
       </div>
       `;
 

@@ -34,6 +34,10 @@ export const openModal = async function (title, content, displayTheater = false)
       // Clear existing theater seating
       theaterContainer.innerHTML = "";
 
+      const screenElement = document.createElement("div");
+      screenElement.classList.add("screen");
+      theaterContainer.appendChild(screenElement);
+
       // Generate seating layout
       for (let i = 0; i < rows; i++) {
         const rowDiv = document.createElement("div");
@@ -42,7 +46,6 @@ export const openModal = async function (title, content, displayTheater = false)
         for (let j = 0; j < columns; j++) {
           const seatButton = document.createElement("button");
           seatButton.classList.add("seat");
-          seatButton.textContent = "O"; // Placeholder for seat button text
           rowDiv.appendChild(seatButton);
         }
 

@@ -14,9 +14,10 @@
 
 .modal {
   background-color: white;
-  margin: 10% auto;
+  margin: 6% auto;
   padding: 20px;
   width: 50%;
+  border-radius: 5px;
 }
 
 .modal-header {
