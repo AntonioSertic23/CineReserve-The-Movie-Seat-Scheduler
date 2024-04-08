@@ -1,4 +1,5 @@
-import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../config.js";
+import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS, API_URL, API_KEY } from "../config.js";
+import { AJAX } from "../helpers.js";
 
 /**
  * Opens a modal with specified title, content, and callback function.
@@ -7,7 +8,7 @@ import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../config.js";
  * @param {boolean} displayTheater - Flag indicating whether to display theater seating or not.
  * @param {function} callback - The callback function to be executed when the confirm button is clicked.
  */
-export const openModal = async function (title, content, displayTheater = false) {
+export const openModal = async function (title, content, displayTheater = false, displayMovies = false) {
   // Clear previous content
   document.getElementById("modalBody").innerHTML = "";
 
@@ -74,6 +75,13 @@ export const openModal = async function (title, content, displayTheater = false)
   // Display modal
   document.getElementById("modalContainer").style.display = "block";
 
+  if (displayMovies) {
+    const searchMoviesButton = document.getElementById("search-movies");
+    const movieTitle = document.getElementById("movie-title");
+    searchMoviesButton.addEventListener("click", async () => await seachMovies(movieTitle.value));
+    // TODO: Add a spinner to rotate while the search is executing
+  }
+
   // Return a promise that resolves when the user clicks confirm
   return new Promise((resolve) => {
     const rowsInput = document.getElementById("theater-rows");
@@ -101,4 +109,53 @@ export const openModal = async function (title, content, displayTheater = false)
  */
 const closeModal = function () {
   document.getElementById("modalContainer").style.display = "none";
+};
+
+const seachMovies = async function (search) {
+  try {
+    const data = await AJAX(`${API_URL}?s=${search}&type=movie&apikey=${API_KEY}`);
+
+    // TODO: Add a message to the user in the modal if no movie found.
+
+    const results = data.Search.map((movie) => {
+      return {
+        id: movie.imdbID,
+        title: movie.Title,
+        image: movie.Poster,
+        year: movie.Year,
+      };
+    });
+    console.log(results);
+
+    const searchresultsContainer = document.getElementById("search-results-container");
+    searchresultsContainer.innerHTML = "";
+    const markup = `${results.map(generateMarkupSearchMovie).join("")}`;
+    searchresultsContainer.insertAdjacentHTML("afterbegin", markup);
+
+    const addButtons = searchresultsContainer.querySelectorAll(".add-button");
+    addButtons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const movieElement = btn.closest(".movie");
+        const titleElement = movieElement.querySelector(".movie-title");
+        document.getElementById("movie-title").value = titleElement.innerText;
+      })
+    );
+  } catch (error) {
+    console.error("Error while fetching movies:", error);
+  }
+};
+
+const generateMarkupSearchMovie = function (movie) {
+  return `
+    <div class="movie" data-movie-id="${movie.id}">
+      <div class="left">
+        <img src="${movie.image}" />
+      </div>
+      <div class="right">
+        <p>Title: <b class="movie-title">${movie.title}</b></p>
+        <p>Year: <b>${movie.year}</b></p>
+        <button class="add-button">Add</button>
+      </div>
+    </div>
+    `;
 };

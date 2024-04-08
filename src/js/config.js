@@ -7,6 +7,9 @@ export const FIREBASE_CONFIG = {
   appId: "",
 };
 
+export const API_URL = "https://www.omdbapi.com/";
+export const API_KEY = "";
+
 export const ADMIN_ID = "";
 
 export const TIMEOUT_SEC = 10;
