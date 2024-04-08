@@ -116,3 +116,43 @@ header {
   border-radius: 5px;
   background-color: #eee;
 }
+
+/********************* ADD MOVIE MODAL *********************/
+
+#search-actions-container {
+  display: flex;
+  flex-direction: row;
+}
+#search-actions-container #movie-title {
+  width: 100%;
+  margin-right: 20px;
+}
+
+#search-results-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+#search-results-container .movie {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid gray;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+#search-results-container .movie .left {
+  height: 150px;
+}
+
+#search-results-container .movie .left img {
+  height: 100%;
+  object-fit: cover;
+}
+
+#search-results-container .movie .right {
+  padding-left: 20px;
+}

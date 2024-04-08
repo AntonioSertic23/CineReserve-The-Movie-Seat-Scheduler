@@ -100,15 +100,19 @@ class TheaterView {
 
       const addMovieModalContent = `
       <div id='add-movie-form'>
-        <input id='add-movie-title' type='text'>
+        <div id="search-actions-container">
+          <input id='movie-title' type='text'>
+          <button id="search-movies">Search</button>
+        </div>
+        <div id="search-results-container"></div>
       </div>
       `;
 
       try {
-        await openModal("Add Movie", addMovieModalContent);
+        await openModal("Add Movie", addMovieModalContent, false, true);
 
         const modalBody = document.getElementById("modalBody");
-        const addMovieTitle = modalBody.querySelector("#add-movie-title").value;
+        const addMovieTitle = modalBody.querySelector("#movie-title").value;
         const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
 
         const theater = this._theaterData.find((theater) => theater.id === theaterId);
@@ -141,15 +145,19 @@ class TheaterView {
 
       const changeMovieModalContent = `
         <div id='change-movie-form'>
-          <input id='change-movie-title' type='text' value="${movieName.textContent}">
+          <div id="search-actions-container">
+            <input id='movie-title' type='text' value="${movieName.textContent}">
+            <button id="search-movies">Search</button>
+          </div>
+          <div id="search-results-container"></div>
         </div>
         `;
 
       try {
-        await openModal("Change Movie", changeMovieModalContent);
+        await openModal("Change Movie", changeMovieModalContent, false, true);
 
         const modalBody = document.getElementById("modalBody");
-        const changeMovieTitle = modalBody.querySelector("#change-movie-title").value;
+        const changeMovieTitle = modalBody.querySelector("#movie-title").value;
 
         const theater = this._theaterData.find((theater) => theater.id === theaterId);
         theater.movie = changeMovieTitle;
