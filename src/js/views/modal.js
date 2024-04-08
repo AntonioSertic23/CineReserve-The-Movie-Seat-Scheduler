@@ -131,6 +131,15 @@ const seachMovies = async function (search) {
     searchresultsContainer.innerHTML = "";
     const markup = `${results.map(generateMarkupSearchMovie).join("")}`;
     searchresultsContainer.insertAdjacentHTML("afterbegin", markup);
+
+    const addButtons = searchresultsContainer.querySelectorAll(".add-button");
+    addButtons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const movieElement = btn.closest(".movie");
+        const titleElement = movieElement.querySelector(".movie-title");
+        document.getElementById("movie-title").value = titleElement.innerText;
+      })
+    );
   } catch (error) {
     console.error("Error while fetching movies:", error);
   }
@@ -138,14 +147,14 @@ const seachMovies = async function (search) {
 
 const generateMarkupSearchMovie = function (movie) {
   return `
-    <div class="movie" movie-id="${movie.id}">
+    <div class="movie" data-movie-id="${movie.id}">
       <div class="left">
         <img src="${movie.image}" />
       </div>
       <div class="right">
-        <p>Title: <b>${movie.title}</b></p>
+        <p>Title: <b class="movie-title">${movie.title}</b></p>
         <p>Year: <b>${movie.year}</b></p>
-        <button class="movie-title">Add movie</button>
+        <button class="add-button">Add</button>
       </div>
     </div>
     `;
