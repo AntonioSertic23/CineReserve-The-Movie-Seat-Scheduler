@@ -11,8 +11,8 @@ class deleteTheaterModal extends Modal {
 
   open = async function (event) {
     const parentTheaterElement = event.target.closest(".theater");
-    const theaterName = parentTheaterElement.querySelector('b[data-theater-name=""]').textContent;
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+    const theaterName = document.getElementById(`theaterName-${theaterId}`).textContent;
 
     this.show("Delete Theater", this.deleteTheaterModalContent(theaterName));
 

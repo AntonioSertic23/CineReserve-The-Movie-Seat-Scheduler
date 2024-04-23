@@ -20,10 +20,8 @@ const controlAddTheater = function (theater) {
   const addMovieButton = theaterActions.querySelector(".theater-add-movie");
   theaterView.addHandlerAddMovie(addMovieButton, controlAddMovie);
 
-  /* 
   const editTheaterButton = theaterActions.querySelector(".theater-edit-theater");
-  theaterView.addHandlerEditTheater(editTheaterButton);
-  */
+  theaterView.addHandlerEditTheater(editTheaterButton, controlEditTheater);
 };
 
 const controlDeleteTheater = function (theaterId) {
@@ -61,12 +59,26 @@ const controlChangeMovie = function (theaterId, movieName) {
   document.getElementById(`movieName-${theaterId}`).textContent = movieName;
 };
 
+const controlEditTheater = function (theaterId, theaterName, theaterRows, theaterColumns) {
+  // Update state
+  theaterModel.editTheater(theaterId, theaterName, theaterRows, theaterColumns);
+
+  // Update UI
+  document.getElementById(`theaterName-${theaterId}`).textContent = theaterName;
+  document.getElementById(`theaterRows-${theaterId}`).textContent = theaterRows;
+  document.getElementById(`theaterColumns-${theaterId}`).textContent = theaterColumns;
+};
+
+const controlBookSeats = function (theaterId, seatsList) {
+  // Update state
+  theaterModel.bookSeats(theaterId, seatsList);
+};
+
 const init = async function () {
   const user = await getLoggedInUser();
 
   document.getElementById("logoutButton").addEventListener("click", () => {
-    console.log(theaterModel.state);
-    // logOut();
+    logOut();
   });
 
   // Loading theaters & users
@@ -88,12 +100,12 @@ const init = async function () {
 
     const changeMovieButtons = document.querySelectorAll(".theater-change-movie");
     changeMovieButtons.forEach((changeMovieButton) => theaterView.addHandlerChangeMovie(changeMovieButton, controlChangeMovie));
-    /* 
-    theaterView.theaterEditTheater(); */
+
+    const editTheaterButtons = document.querySelectorAll(".theater-edit-theater");
+    editTheaterButtons.forEach((editTheaterButton) => theaterView.addHandlerEditTheater(editTheaterButton, controlEditTheater));
   } else {
-    /* theaterView.theaterBookSeats();
-    IZBACITI EDIT SEAT, JEDNOM KAD SI KUPIO TO JE TO...
-    theaterView.theaterEditSeats(); */
+    const bookSeatsButtons = document.querySelectorAll(".theater-book-seats");
+    bookSeatsButtons.forEach((bookSeatsButton) => theaterView.addHandlerBookSeats(bookSeatsButton, controlBookSeats));
   }
 };
 init();

@@ -16,11 +16,16 @@ export const loadTheater = async function () {
         movie: theater.movie,
         rows: theater.rows,
         columns: theater.columns,
+        seats: [],
       })
     );
   } catch (err) {
     alert(err);
   }
+};
+
+export const getTheater = function (theaterId) {
+  return state.find((theater) => theater.id === theaterId);
 };
 
 export const addTheater = function (theater) {
@@ -42,4 +47,16 @@ export const addMovie = function (theaterId, movieName) {
 export const changeMovie = function (theaterId, movieName) {
   const theater = state.find((theater) => theater.id === theaterId);
   theater.movie = movieName;
+};
+
+export const editTheater = function (theaterId, theaterName, theaterRows, theaterColumns) {
+  const theater = state.find((theater) => theater.id === theaterId);
+  theater.name = theaterName;
+  theater.rows = theaterRows;
+  theater.columns = theaterColumns;
+};
+
+export const bookSeats = function (theaterId, seatsList) {
+  const theater = state.find((theater) => theater.id === theaterId);
+  theater.seats = seatsList;
 };
