@@ -10,17 +10,19 @@ const controlAddTheater = function (theater) {
   // Update UI
   theaterView.createNewTheater(newTheater);
 
-  /* 
+  // Set listeners
+  const allTheaters = document.getElementById("all-theaters");
   const theaterActions = allTheaters.querySelector(`[data-theater-id="${newTheater.id}"]`);
-  
+
+  const deleteTheaterButton = theaterActions.querySelector(".theater-delete-theater");
+  theaterView.addHandlerDeleteTheater(deleteTheaterButton, controlDeleteTheater);
+
   const addMovieButton = theaterActions.querySelector(".theater-add-movie");
-  theaterView.addHandlerAddMovie(addMovieButton);
-  
+  theaterView.addHandlerAddMovie(addMovieButton, controlAddMovie);
+
+  /* 
   const editTheaterButton = theaterActions.querySelector(".theater-edit-theater");
   theaterView.addHandlerEditTheater(editTheaterButton);
-  
-  const deleteTheaterButton = theaterActions.querySelector(".theater-delete-theater");
-  theaterView.addHandlerDeleteTheater(deleteTheaterButton);
   */
 };
 
@@ -30,6 +32,33 @@ const controlDeleteTheater = function (theaterId) {
 
   // Update UI
   document.getElementById("all-theaters").querySelector(`[data-theater-id="${theaterId}"]`).remove();
+};
+
+const controlAddMovie = function (theaterId, movieName) {
+  // Update state
+  theaterModel.addMovie(theaterId, movieName);
+
+  // Update UI
+  document.getElementById(`movieName-${theaterId}`).textContent = movieName;
+
+  // Change to Change Movie
+  // Remove previous event listener and add a new one
+  const addMovieButton = document.getElementById("all-theaters").querySelector(`[data-theater-id="${theaterId}"]`).querySelector(".theater-add-movie");
+  const newAddMovieButton = addMovieButton.cloneNode(true);
+  addMovieButton.parentNode.replaceChild(newAddMovieButton, addMovieButton);
+  theaterView.addHandlerChangeMovie(newAddMovieButton, controlChangeMovie);
+
+  newAddMovieButton.classList.remove("theater-add-movie");
+  newAddMovieButton.classList.add("theater-change-movie");
+  newAddMovieButton.textContent = "Change Movie";
+};
+
+const controlChangeMovie = function (theaterId, movieName) {
+  // Update state
+  theaterModel.changeMovie(theaterId, movieName);
+
+  // Update UI
+  document.getElementById(`movieName-${theaterId}`).textContent = movieName;
 };
 
 const init = async function () {
@@ -51,14 +80,19 @@ const init = async function () {
   if (userType === "admin") {
     theaterView.addHandlerAddTheater(controlAddTheater);
 
-    const theaterDeleteTheater = document.querySelectorAll(".theater-delete-theater");
-    theaterDeleteTheater.forEach((theater) => theaterView.addHandlerDeleteTheater(theater, controlDeleteTheater));
+    const deleteTheaterButtons = document.querySelectorAll(".theater-delete-theater");
+    deleteTheaterButtons.forEach((deleteTheaterButton) => theaterView.addHandlerDeleteTheater(deleteTheaterButton, controlDeleteTheater));
 
-    /* theaterView.theaterAddMovie();
-    theaterView.theaterChangeMovie();
+    const addMovieButtons = document.querySelectorAll(".theater-add-movie");
+    addMovieButtons.forEach((addMovieButton) => theaterView.addHandlerAddMovie(addMovieButton, controlAddMovie));
+
+    const changeMovieButtons = document.querySelectorAll(".theater-change-movie");
+    changeMovieButtons.forEach((changeMovieButton) => theaterView.addHandlerChangeMovie(changeMovieButton, controlChangeMovie));
+    /* 
     theaterView.theaterEditTheater(); */
   } else {
     /* theaterView.theaterBookSeats();
+    IZBACITI EDIT SEAT, JEDNOM KAD SI KUPIO TO JE TO...
     theaterView.theaterEditSeats(); */
   }
 };

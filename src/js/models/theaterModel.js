@@ -33,3 +33,13 @@ export const addTheater = function (theater) {
 export const deleteTheater = function (theaterId) {
   state = state.filter((theater) => theater.id !== theaterId);
 };
+
+export const addMovie = function (theaterId, movieName) {
+  const theater = state.find((theater) => theater.id === theaterId);
+  theater.movie = movieName;
+};
+
+export const changeMovie = function (theaterId, movieName) {
+  const theater = state.find((theater) => theater.id === theaterId);
+  theater.movie = movieName;
+};

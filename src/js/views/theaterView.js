@@ -1,5 +1,7 @@
 import addTheaterModal from "./modals/addTheaterModal.js";
 import deleteTheaterModal from "./modals/deleteTheaterModal.js";
+import addMovieModal from "./modals/addMovieModal.js";
+import changeMovieModal from "./modals/changeMovieModal.js";
 
 class TheaterView {
   _parentElement = document.querySelector(".container");
@@ -67,8 +69,8 @@ class TheaterView {
     });
   }
 
-  addHandlerDeleteTheater(theater, handler) {
-    theater.addEventListener("click", async (event) => {
+  addHandlerDeleteTheater(deleteTheaterButton, handler) {
+    deleteTheaterButton.addEventListener("click", async (event) => {
       try {
         const theaterId = await deleteTheaterModal.open(event);
 
@@ -79,83 +81,29 @@ class TheaterView {
     });
   }
 
+  addHandlerAddMovie(addMovieButton, handler) {
+    addMovieButton.addEventListener("click", async (event) => {
+      try {
+        const [theaterId, movieName] = await addMovieModal.open(event);
+        handler(theaterId, movieName);
+      } catch (error) {
+        console.log("An error has occurred.", error);
+      }
+    });
+  }
+
+  addHandlerChangeMovie(changeMovieButton, handler) {
+    changeMovieButton.addEventListener("click", async (event) => {
+      try {
+        const [theaterId, movieName] = await changeMovieModal.open(event);
+        handler(theaterId, movieName);
+      } catch (error) {
+        console.log("An error has occurred.", error);
+      }
+    });
+  }
+
   /*
-  addHandlerAddMovie(movie) {
-    movie.addEventListener("click", async (event) => {
-      const parentTheaterElement = event.target.closest(".theater");
-
-      const addMovieModalContent = `
-      <div id='add-movie-form'>
-        <div id="search-actions-container">
-          <input id='movie-title' type='text'>
-          <button id="search-movies">Search</button>
-        </div>
-        <div id="search-results-container"></div>
-      </div>
-      `;
-
-      try {
-        await openModal("Add Movie", addMovieModalContent, false, true);
-
-        const modalBody = document.getElementById("modalBody");
-        const addMovieTitle = modalBody.querySelector("#movie-title").value;
-        const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
-
-        const theater = this._theaterData.find((theater) => theater.id === theaterId);
-        theater.movie = addMovieTitle;
-
-        const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
-
-        // Remove previous event listener and add a new one
-        const addMovieButton = parentTheaterElement.querySelector(".theater-add-movie");
-        const newAddMovieButton = addMovieButton.cloneNode(true);
-        addMovieButton.parentNode.replaceChild(newAddMovieButton, addMovieButton);
-        this.addHandlerChangeMovie(newAddMovieButton);
-
-        newAddMovieButton.classList.remove("theater-add-movie");
-        newAddMovieButton.classList.add("theater-change-movie");
-        newAddMovieButton.textContent = "Change Movie";
-
-        movieName.textContent = addMovieTitle;
-      } catch (error) {
-        console.log("An error has occurred.", error);
-      }
-    });
-  }
-
-  addHandlerChangeMovie(movie) {
-    movie.addEventListener("click", async (event) => {
-      const parentTheaterElement = event.target.closest(".theater");
-      const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
-      const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`);
-
-      const changeMovieModalContent = `
-        <div id='change-movie-form'>
-          <div id="search-actions-container">
-            <input id='movie-title' type='text' value="${movieName.textContent}">
-            <button id="search-movies">Search</button>
-          </div>
-          <div id="search-results-container"></div>
-        </div>
-        `;
-
-      try {
-        await openModal("Change Movie", changeMovieModalContent, false, true);
-
-        const modalBody = document.getElementById("modalBody");
-        const changeMovieTitle = modalBody.querySelector("#movie-title").value;
-
-        const theater = this._theaterData.find((theater) => theater.id === theaterId);
-        theater.movie = changeMovieTitle;
-
-        // TODO: Add trim() and set the value to "-" if it's empty, and change from "Change Movie" to "Add Movie".
-        movieName.textContent = changeMovieTitle;
-      } catch (error) {
-        console.log("An error has occurred.", error);
-      }
-    });
-  }
-
   addHandlerEditTheater(theater) {
     theater.addEventListener("click", async (event) => {
       const parentTheaterElement = event.target.closest(".theater");
