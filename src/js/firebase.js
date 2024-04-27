@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase
 import { getDatabase, ref, child, get, set, remove, update } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-database.js";
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
 import { FIREBASE_CONFIG, ADMIN_ID, TIMEOUT_SEC } from "./config.js";
+import errorModal from "./views/modals/errorModal.js";
 
 // Initialize Firebase with the provided configuration.
 initializeApp(FIREBASE_CONFIG);
@@ -19,13 +20,11 @@ onAuthStateChanged(AUTH, async (user) => {
       if (window.location.pathname.endsWith("login.html")) {
         window.location.href = "/";
       }
-      console.log("User is signed in");
     } else {
       // If user is not signed in, redirect to login page
       if (!window.location.pathname.endsWith("login.html")) {
         window.location.href = "/login.html";
       }
-      console.log("User is signed out");
     }
   } catch (error) {
     console.error("Error checking authentication status:", error);
@@ -41,9 +40,8 @@ export const logIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(AUTH, email, password);
     const user = userCredential.user;
-    console.log("User successfully logged in:", user);
   } catch (error) {
-    console.error("Error logging in:", error.code, error.message);
+    await errorModal.open(`Error logging in: ${error.code}, ${error.message}`);
   }
 };
 
@@ -56,9 +54,8 @@ export const signUp = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(AUTH, email, password);
     const user = userCredential.user;
-    console.log("Signed up", user);
   } catch (error) {
-    console.error("Error signing up:", error.code, error.message);
+    await errorModal.open(`Error signing up: ${error.code}, ${error.message}`);
   }
 };
 
@@ -66,9 +63,8 @@ export const signUp = async (email, password) => {
 export const logOut = async () => {
   try {
     await signOut(AUTH);
-    console.log("Sign-out successful.");
   } catch (error) {
-    console.error("An error occurred during sign-out:", error);
+    await errorModal.open(`An error occurred during sign-out: ${error}`);
   }
 };
 
@@ -117,8 +113,7 @@ export const getLoggedInUser = async () => {
       type: currentUser.uid === ADMIN_ID ? "admin" : "user",
     };
   } catch (error) {
-    // Handle timeout error or any other errors that might occur
-    console.error(error);
+    await errorModal.open(`${error}`);
     return "unknown"; // Return "unknown" in case of error
   }
 };
@@ -127,15 +122,14 @@ export const getAllTheaters = async () => {
   try {
     const snapshot = await get(child(dbRef, "theaters"));
     if (snapshot.exists()) {
-      console.log(snapshot.val());
       return snapshot.val();
     } else {
-      console.log("No data available");
+      alert("No data available");
       return null;
     }
   } catch (error) {
-    console.error(error);
-    throw error;
+    await errorModal.open(`${error}`);
+    alert(error);
   }
 };
 
@@ -143,14 +137,14 @@ export const createTheater = async (theaterData) => {
   try {
     set(child(dbRef, "theaters/" + theaterData.id), theaterData)
       .then(() => {
-        console.log("Data saved successfully!");
+        alert("Data saved successfully!");
       })
       .catch((error) => {
-        console.log("The write failed... " + error);
+        alert("The write failed... " + error);
       });
   } catch (error) {
-    console.error("Greška pri kreiranju teatra:", error);
-    throw error;
+    await errorModal.open(`${error}`);
+    alert(error);
   }
 };
 
@@ -158,36 +152,51 @@ export const deleteTheater = async (theaterId) => {
   try {
     remove(child(dbRef, "theaters/" + theaterId))
       .then(() => {
-        console.log("Data removed successfully!");
+        alert("Data removed successfully!");
       })
       .catch((error) => {
-        console.log("The remove failed... " + error);
+        alert("The remove failed... " + error);
       });
   } catch (error) {
-    console.error("Greška pri brisanju teatra:", error);
-    throw error;
+    await errorModal.open(`${error}`);
+    alert(error);
   }
 };
 
 export const updateMovie = async (theaterId, movieName) => {
-  const updates = {};
-  updates["/theaters/" + theaterId + "/movie"] = movieName;
+  try {
+    const updates = {};
+    updates["/theaters/" + theaterId + "/movie"] = movieName;
 
-  return update(dbRef, updates);
+    return update(dbRef, updates);
+  } catch (error) {
+    await errorModal.open(`${error}`);
+    alert(error);
+  }
 };
 
 export const editTheater = async (theaterId, theaterName, theaterRows, theaterColumns) => {
-  const updates = {};
-  updates["/theaters/" + theaterId + "/name"] = theaterName;
-  updates["/theaters/" + theaterId + "/rows"] = theaterRows;
-  updates["/theaters/" + theaterId + "/columns"] = theaterColumns;
+  try {
+    const updates = {};
+    updates["/theaters/" + theaterId + "/name"] = theaterName;
+    updates["/theaters/" + theaterId + "/rows"] = theaterRows;
+    updates["/theaters/" + theaterId + "/columns"] = theaterColumns;
 
-  return update(dbRef, updates);
+    return update(dbRef, updates);
+  } catch (error) {
+    await errorModal.open(`${error}`);
+    alert(error);
+  }
 };
 
 export const bookSeats = async (theaterId, seatsList) => {
-  const updates = {};
-  updates["/theaters/" + theaterId + "/seats"] = seatsList;
+  try {
+    const updates = {};
+    updates["/theaters/" + theaterId + "/seats"] = seatsList;
 
-  return update(dbRef, updates);
+    return update(dbRef, updates);
+  } catch (error) {
+    await errorModal.open(`${error}`);
+    alert(error);
+  }
 };

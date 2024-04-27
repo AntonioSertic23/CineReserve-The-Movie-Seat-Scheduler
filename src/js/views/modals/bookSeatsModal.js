@@ -90,8 +90,7 @@ class bookSeatsModal extends Modal {
           this.close();
           resolve([theater.id, seatsList]); // Resolve the promise when the user clicks confirm
         } else {
-          // TODO: Add a message to the user in the modal.
-          console.log("Saving empty values is not allowed!");
+          this.showErrorMessage('<p class="error-message">You must select at least one seat.</p>');
         }
       });
     });

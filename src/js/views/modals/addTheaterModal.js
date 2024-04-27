@@ -81,7 +81,7 @@ class addTheaterModal extends Modal {
     if (rowsInput.value && columnsInput.value) generateTheaterSeats(rowsInput.value, columnsInput.value);
 
     // Return a promise that resolves when the user clicks confirm
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const nameInput = document.getElementById("theater-name");
       const rowsInput = document.getElementById("theater-rows");
       const columnsInput = document.getElementById("theater-columns");
@@ -96,8 +96,7 @@ class addTheaterModal extends Modal {
           this.close();
           resolve([nameInput.value, rowsInput.value, columnsInput.value]); // Resolve the promise when the user clicks confirm
         } else {
-          // TODO: Add a message to the user in the modal.
-          console.log("Saving empty values is not allowed!");
+          this.showErrorMessage('<p class="error-message">All fields must be filled in.</p>');
         }
       });
     });

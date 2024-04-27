@@ -13,7 +13,6 @@ export const getNextTheaterId = () => {
 };
 
 export const addTheater = async (theater) => {
-  console.log("state", state);
   if (state) {
     state.push(theater);
   } else {

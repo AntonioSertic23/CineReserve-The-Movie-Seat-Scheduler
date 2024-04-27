@@ -101,8 +101,7 @@ class editTheaterModal extends Modal {
           this.close();
           resolve([theaterId, nameInput.value, rowsInput.value, columnsInput.value]); // Resolve the promise when the user clicks confirm
         } else {
-          // TODO: Add a message to the user in the modal.
-          console.log("Saving empty values is not allowed!");
+          this.showErrorMessage('<p class="error-message">All fields must be filled in.</p>');
         }
       });
     });

@@ -22,4 +22,11 @@ export class Modal {
     // Clear previous content
     document.getElementById("modalBody").innerHTML = "";
   };
+
+  showErrorMessage = (message) => {
+    const modalBody = document.getElementById("modalBody");
+    const newElement = document.createElement("div");
+    newElement.innerHTML = message;
+    modalBody.appendChild(newElement);
+  };
 }

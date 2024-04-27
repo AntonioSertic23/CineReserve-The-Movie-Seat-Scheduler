@@ -74,7 +74,7 @@ class TheaterView {
 
         handler(data);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
@@ -86,7 +86,7 @@ class TheaterView {
 
         handler(theaterId);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
@@ -98,7 +98,7 @@ class TheaterView {
 
         handler(theaterId, movieName);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
@@ -110,7 +110,7 @@ class TheaterView {
 
         handler(theaterId, movieName);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
@@ -122,7 +122,7 @@ class TheaterView {
 
         handler(theaterId, theaterName, theaterRows, theaterColumns);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
@@ -134,7 +134,7 @@ class TheaterView {
 
         handler(theaterId, seatsList);
       } catch (error) {
-        console.log("An error has occurred.", error);
+        alert("An error has occurred.", error);
       }
     });
   }
