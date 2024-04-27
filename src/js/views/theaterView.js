@@ -19,11 +19,18 @@ class TheaterView {
         ${userType === "admin" ? '<button id="add-theater-button">Add Theater</button>' : ""}
       </div>
       <div id="all-theaters">
-        ${userType === "admin" ? theaterData.map(this._generateAdminMarkupTheater).join("") : theaterData.map(this._generateUserMarkupTheater).join("")}
+        ${this._generateMarkupTheater(userType, theaterData)}
       </div>
       <br><br>
     </div>`;
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
+  }
+
+  _generateMarkupTheater(userType, theaterData) {
+    if (!theaterData) return "";
+
+    const generateMarkup = userType === "admin" ? this._generateAdminMarkupTheater : this._generateUserMarkupTheater;
+    return (theaterData ?? []).map(generateMarkup).join("");
   }
 
   _generateAdminMarkupTheater(theater) {
@@ -60,8 +67,8 @@ class TheaterView {
         const data = {
           name: theaterName,
           movie: "-",
-          rows: theaterRows,
-          columns: theaterColumns,
+          rows: parseInt(theaterRows),
+          columns: parseInt(theaterColumns),
           seats: [],
         };
 

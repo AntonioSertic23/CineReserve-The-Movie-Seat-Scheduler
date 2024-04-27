@@ -2,7 +2,7 @@ import { Modal } from "./modal.js";
 import { getTheater } from "../../models/theaterModel.js";
 
 class bookSeatsModal extends Modal {
-  bookSeatsModalContent = function (theaterName, theaterMovie) {
+  bookSeatsModalContent = (theaterName, theaterMovie) => {
     return `
     <div id='book-seats-form'>
       <p>${theaterName} - <b>${theaterMovie}</b></p>
@@ -27,14 +27,14 @@ class bookSeatsModal extends Modal {
     `;
   };
 
-  open = async function (event) {
+  open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
     const theater = await getTheater(theaterId);
 
     this.show("Book Seats", this.bookSeatsModalContent(theater.name, theater.movie));
 
-    let seatsList = theater.seats;
+    let seatsList = theater.seats || [];
 
     const theaterContainer = document.getElementById("theater-container");
 

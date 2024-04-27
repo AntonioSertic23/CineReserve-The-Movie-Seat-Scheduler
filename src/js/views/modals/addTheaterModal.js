@@ -30,7 +30,7 @@ class addTheaterModal extends Modal {
     </div>
     `;
 
-  open = async function () {
+  open = async () => {
     this.show("Add Theater", this.addTheaterModalContent);
 
     const theaterContainer = document.getElementById("theater-container");

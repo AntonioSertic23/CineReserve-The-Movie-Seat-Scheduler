@@ -2,7 +2,7 @@ import { Modal } from "./modal.js";
 import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../../config.js";
 
 class editTheaterModal extends Modal {
-  editTheaterModalContent = function (theaterName, theaterRows, theaterColumns) {
+  editTheaterModalContent = (theaterName, theaterRows, theaterColumns) => {
     return `
     <div id="edit-theater-form">
       <label for="theater-name">Name:</label>
@@ -32,7 +32,7 @@ class editTheaterModal extends Modal {
     `;
   };
 
-  open = async function (event) {
+  open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
     const theaterName = document.getElementById(`theaterName-${theaterId}`).textContent;
