@@ -1,7 +1,7 @@
 import { Modal } from "./modal.js";
 
 class changeMovieModal extends Modal {
-  changeMovieModalContent = function (movieName) {
+  changeMovieModalContent = (movieName) => {
     return `
     <div id='change-movie-form'>
       <div id="search-actions-container">
@@ -13,7 +13,7 @@ class changeMovieModal extends Modal {
     `;
   };
 
-  open = async function (event) {
+  open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
     const movieName = parentTheaterElement.querySelector(`#movieName-${theaterId}`).textContent;

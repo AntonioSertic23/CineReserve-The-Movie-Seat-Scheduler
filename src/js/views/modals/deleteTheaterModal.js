@@ -1,7 +1,7 @@
 import { Modal } from "./modal.js";
 
 class deleteTheaterModal extends Modal {
-  deleteTheaterModalContent = function (theaterName) {
+  deleteTheaterModalContent = (theaterName) => {
     return `
     <div id="edit-theater-form">
       <p>Are you sure you want to delete <b>${theaterName}</b> theater?</p>
@@ -9,7 +9,7 @@ class deleteTheaterModal extends Modal {
     `;
   };
 
-  open = async function (event) {
+  open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
     const theaterName = document.getElementById(`theaterName-${theaterId}`).textContent;

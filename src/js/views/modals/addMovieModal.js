@@ -3,7 +3,7 @@ import { AJAX } from "../../helpers.js";
 import { API_URL, API_KEY } from "../../config.js";
 
 class addMovieModal extends Modal {
-  addMovieModalContent = function () {
+  addMovieModalContent = () => {
     return `
     <div id='add-movie-form'>
       <div id="search-actions-container">
@@ -15,7 +15,7 @@ class addMovieModal extends Modal {
     `;
   };
 
-  seachMovies = async function (search) {
+  seachMovies = async (search) => {
     try {
       const data = await AJAX(`${API_URL}?s=${search}&type=movie&apikey=${API_KEY}`);
 
@@ -49,7 +49,7 @@ class addMovieModal extends Modal {
     }
   };
 
-  generateMarkupSearchMovie = function (movie) {
+  generateMarkupSearchMovie = (movie) => {
     return `
     <div class="movie" data-movie-id="${movie.id}">
       <div class="left">
@@ -64,7 +64,7 @@ class addMovieModal extends Modal {
     `;
   };
 
-  open = async function (event) {
+  open = async (event) => {
     this.show("Add Movie", this.addMovieModalContent());
 
     const parentTheaterElement = event.target.closest(".theater");

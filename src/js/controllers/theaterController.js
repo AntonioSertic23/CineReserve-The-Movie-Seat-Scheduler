@@ -1,18 +1,23 @@
-import { logOut, getLoggedInUser } from "../firebase.js";
+import * as firebase from "../firebase.js";
 import * as userModel from "../models/userModel.js";
 import * as theaterModel from "../models/theaterModel.js";
 import theaterView from "../views/theaterView.js";
 
-const controlAddTheater = function (theater) {
+const controlAddTheater = (theater) => {
   // Update state
-  const newTheater = theaterModel.addTheater(theater);
+  const nextTheaterId = theaterModel.getNextTheaterId();
+  theater.id = nextTheaterId;
+  theaterModel.addTheater(theater);
+
+  // Update firebase
+  firebase.createTheater(theater);
 
   // Update UI
-  theaterView.createNewTheater(newTheater);
+  theaterView.createNewTheater(theater);
 
   // Set listeners
   const allTheaters = document.getElementById("all-theaters");
-  const theaterActions = allTheaters.querySelector(`[data-theater-id="${newTheater.id}"]`);
+  const theaterActions = allTheaters.querySelector(`[data-theater-id="${nextTheaterId}"]`);
 
   const deleteTheaterButton = theaterActions.querySelector(".theater-delete-theater");
   theaterView.addHandlerDeleteTheater(deleteTheaterButton, controlDeleteTheater);
@@ -24,17 +29,23 @@ const controlAddTheater = function (theater) {
   theaterView.addHandlerEditTheater(editTheaterButton, controlEditTheater);
 };
 
-const controlDeleteTheater = function (theaterId) {
+const controlDeleteTheater = (theaterId) => {
   // Update state
   theaterModel.deleteTheater(theaterId);
+
+  // Update firebase
+  firebase.deleteTheater(theaterId);
 
   // Update UI
   document.getElementById("all-theaters").querySelector(`[data-theater-id="${theaterId}"]`).remove();
 };
 
-const controlAddMovie = function (theaterId, movieName) {
+const controlAddMovie = (theaterId, movieName) => {
   // Update state
-  theaterModel.addMovie(theaterId, movieName);
+  theaterModel.updateMovie(theaterId, movieName);
+
+  // Update firebase
+  firebase.updateMovie(theaterId, movieName);
 
   // Update UI
   document.getElementById(`movieName-${theaterId}`).textContent = movieName;
@@ -51,17 +62,23 @@ const controlAddMovie = function (theaterId, movieName) {
   newAddMovieButton.textContent = "Change Movie";
 };
 
-const controlChangeMovie = function (theaterId, movieName) {
+const controlChangeMovie = (theaterId, movieName) => {
   // Update state
-  theaterModel.changeMovie(theaterId, movieName);
+  theaterModel.updateMovie(theaterId, movieName);
+
+  // Update firebase
+  firebase.updateMovie(theaterId, movieName);
 
   // Update UI
   document.getElementById(`movieName-${theaterId}`).textContent = movieName;
 };
 
-const controlEditTheater = function (theaterId, theaterName, theaterRows, theaterColumns) {
+const controlEditTheater = (theaterId, theaterName, theaterRows, theaterColumns) => {
   // Update state
   theaterModel.editTheater(theaterId, theaterName, theaterRows, theaterColumns);
+
+  // Update firebase
+  firebase.editTheater(theaterId, theaterName, theaterRows, theaterColumns);
 
   // Update UI
   document.getElementById(`theaterName-${theaterId}`).textContent = theaterName;
@@ -69,20 +86,25 @@ const controlEditTheater = function (theaterId, theaterName, theaterRows, theate
   document.getElementById(`theaterColumns-${theaterId}`).textContent = theaterColumns;
 };
 
-const controlBookSeats = function (theaterId, seatsList) {
+const controlBookSeats = (theaterId, seatsList) => {
   // Update state
   theaterModel.bookSeats(theaterId, seatsList);
+
+  // Update firebase
+  firebase.bookSeats(theaterId, seatsList);
 };
 
-const init = async function () {
-  const user = await getLoggedInUser();
+const init = async () => {
+  const user = await firebase.getLoggedInUser();
+
+  const theaters = await firebase.getAllTheaters();
 
   document.getElementById("logoutButton").addEventListener("click", () => {
-    logOut();
+    firebase.logOut();
   });
 
   // Loading theaters & users
-  await theaterModel.loadTheater();
+  await theaterModel.loadTheater(theaters);
   await userModel.loadUser(user);
 
   // Rendering theater

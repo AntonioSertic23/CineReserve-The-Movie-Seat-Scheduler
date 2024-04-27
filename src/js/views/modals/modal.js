@@ -1,7 +1,7 @@
 export class Modal {
   constructor() {}
 
-  show = function (title, content) {
+  show = (title, content) => {
     // Set modal title and content
     document.getElementById("modalTitle").innerText = title;
     document.getElementById("modalBody").innerHTML = content;
@@ -16,7 +16,7 @@ export class Modal {
     document.getElementById("modalContainer").style.display = "block";
   };
 
-  close = function () {
+  close = () => {
     document.getElementById("modalContainer").style.display = "none";
 
     // Clear previous content
