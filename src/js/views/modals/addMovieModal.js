@@ -7,6 +7,7 @@ class addMovieModal extends Modal {
     return `
     <div id='add-movie-form'>
       <div id="search-actions-container">
+        <label for="movie-title">Title:</label>
         <input id='movie-title' type='text'>
         <button id="search-movies">Search</button>
       </div>
@@ -19,7 +20,10 @@ class addMovieModal extends Modal {
     try {
       const data = await AJAX(`${API_URL}?s=${search}&type=movie&apikey=${API_KEY}`);
 
-      // TODO: Add a message to the user in the modal if no movie found.
+      if (data.Error) {
+        this.showErrorMessage(`<p class="error-message">No movies found with that name.</p>`);
+        return;
+      }
 
       const results = data.Search.map((movie) => {
         return {
@@ -29,7 +33,6 @@ class addMovieModal extends Modal {
           year: movie.Year,
         };
       });
-      console.log(results);
 
       const searchresultsContainer = document.getElementById("search-results-container");
       searchresultsContainer.innerHTML = "";
@@ -88,8 +91,7 @@ class addMovieModal extends Modal {
           this.close();
           resolve([theaterId, addMovieTitle.value]); // Resolve the promise when the user clicks confirm
         } else {
-          // TODO: Add a message to the user in the modal.
-          console.log("Saving empty values is not allowed!");
+          this.showErrorMessage('<p class="error-message">The movie title is a required field.</p>');
         }
       });
     });
