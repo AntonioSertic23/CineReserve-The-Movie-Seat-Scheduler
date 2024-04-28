@@ -24,9 +24,15 @@ export class Modal {
   };
 
   showErrorMessage = (message) => {
+    this.clearErrorMessage();
     const modalBody = document.getElementById("modalBody");
     const newElement = document.createElement("div");
-    newElement.innerHTML = message;
+    newElement.innerHTML = `<p class="error-message">${message}</p>`;
     modalBody.appendChild(newElement);
+  };
+
+  clearErrorMessage = () => {
+    const errorMessage = document.querySelector(".error-message");
+    if (errorMessage) errorMessage.remove();
   };
 }

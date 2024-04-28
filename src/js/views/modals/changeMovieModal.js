@@ -1,5 +1,5 @@
 import { Modal } from "./modal.js";
-import { AJAX } from "../../helpers.js";
+import { AJAX, renderSpinner } from "../../helpers.js";
 import { API_URL, API_KEY } from "../../config.js";
 
 class changeMovieModal extends Modal {
@@ -18,10 +18,16 @@ class changeMovieModal extends Modal {
 
   seachMovies = async (search) => {
     try {
+      this.clearErrorMessage();
+      const searchresultsContainer = document.getElementById("search-results-container");
+      const margin = "50px auto 50px 95%";
+      renderSpinner(searchresultsContainer, margin);
+
       const data = await AJAX(`${API_URL}?s=${search}&type=movie&apikey=${API_KEY}`);
 
+      searchresultsContainer.innerHTML = "";
       if (data.Error) {
-        this.showErrorMessage(`<p class="error-message">No movies found with that name.</p>`);
+        this.showErrorMessage(`No movies found with that name.`);
         return;
       }
 
@@ -34,8 +40,6 @@ class changeMovieModal extends Modal {
         };
       });
 
-      const searchresultsContainer = document.getElementById("search-results-container");
-      searchresultsContainer.innerHTML = "";
       const markup = `${results.map(this.generateMarkupSearchMovie).join("")}`;
       searchresultsContainer.insertAdjacentHTML("afterbegin", markup);
 
@@ -48,7 +52,7 @@ class changeMovieModal extends Modal {
         })
       );
     } catch (error) {
-      this.showErrorMessage(`<p class="error-message">Error while fetching movies: ${error}</p>`);
+      this.showErrorMessage(`Error while fetching movies: ${error}`);
     }
   };
 
@@ -91,7 +95,7 @@ class changeMovieModal extends Modal {
           this.close();
           resolve([theaterId, changeMovieTitle.value.trim()]); // Resolve the promise when the user clicks confirm
         } else {
-          this.showErrorMessage('<p class="error-message">The movie title is a required field.</p>');
+          this.showErrorMessage("The movie title is a required field.");
         }
       });
     });

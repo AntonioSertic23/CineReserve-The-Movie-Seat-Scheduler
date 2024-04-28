@@ -80,11 +80,11 @@ header {
 #search-results-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 #search-results-container .movie {
-  margin-top: 20px;
   display: flex;
   flex-direction: row;
   border: 1px solid gray;
@@ -94,7 +94,7 @@ header {
 }
 
 #search-results-container .movie .left {
-  height: 150px;
+  height: 100px;
 }
 
 #search-results-container .movie .left img {
@@ -103,5 +103,17 @@ header {
 }
 
 #search-results-container .movie .right {
-  padding-left: 20px;
+  position: relative;
+  width: 100%;
+  padding-left: 10px;
+}
+
+#search-results-container .movie .right p {
+  margin: 10px 0;
+}
+
+#search-results-container .movie .right button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }

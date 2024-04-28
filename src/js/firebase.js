@@ -3,6 +3,7 @@ import { getDatabase, ref, child, get, set, remove, update } from "https://www.g
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
 import { FIREBASE_CONFIG, ADMIN_ID, TIMEOUT_SEC } from "./config.js";
 import errorModal from "./views/modals/errorModal.js";
+import { renderSpinner } from "./helpers.js";
 
 // Initialize Firebase with the provided configuration.
 initializeApp(FIREBASE_CONFIG);
@@ -37,11 +38,15 @@ onAuthStateChanged(AUTH, async (user) => {
  * @param {string} password - User's password.
  */
 export const logIn = async (email, password) => {
+  const spinnerContainer = document.getElementById("spinner-container");
+  const margin = "20px auto -20px auto";
+  renderSpinner(spinnerContainer, margin);
+
   try {
-    const userCredential = await signInWithEmailAndPassword(AUTH, email, password);
-    const user = userCredential.user;
+    await signInWithEmailAndPassword(AUTH, email, password);
   } catch (error) {
-    await errorModal.open(`Error logging in: ${error.code}, ${error.message}`);
+    spinnerContainer.innerHTML = "";
+    await errorModal.open("Invalid login credentials. Please double-check your email and password and try again.");
   }
 };
 
@@ -52,10 +57,21 @@ export const logIn = async (email, password) => {
  */
 export const signUp = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(AUTH, email, password);
-    const user = userCredential.user;
+    await createUserWithEmailAndPassword(AUTH, email, password);
   } catch (error) {
-    await errorModal.open(`Error signing up: ${error.code}, ${error.message}`);
+    switch (error.code) {
+      case "auth/email-already-in-use":
+        await errorModal.open("The email address is already in use by another account. Please use a different email address.");
+        break;
+      case "auth/invalid-email":
+        await errorModal.open("Invalid email address. Please enter a valid email address.");
+        break;
+      case "auth/weak-password":
+        await errorModal.open("The password is too weak. Please choose a stronger password.");
+        break;
+      default:
+        await errorModal.open("An error occurred while signing up. Please try again later.");
+    }
   }
 };
 
