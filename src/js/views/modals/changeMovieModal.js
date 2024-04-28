@@ -52,7 +52,13 @@ class changeMovieModal extends Modal {
           const movieTitle = movieElement.querySelector(".movie-title").innerText;
           const movieYear = movieElement.querySelector(".year-title").innerText;
 
-          resolve([theaterId, movieTitle]);
+          const movie = {
+            title: movieTitle,
+            year: movieYear,
+            image: movieImage,
+          };
+
+          resolve([theaterId, movie]);
           this.close();
         })
       );

@@ -24,9 +24,11 @@ export const deleteTheater = (theaterId) => {
   state = state.filter((theater) => theater?.id !== theaterId);
 };
 
-export const updateMovie = (theaterId, movieName) => {
+export const updateMovie = (theaterId, movie) => {
   const theater = state.find((theater) => theater?.id === theaterId);
-  theater.movie = movieName;
+  theater.movie.title = movie.title;
+  theater.movie.year = movie.year;
+  theater.movie.image = movie.image;
 };
 
 export const editTheater = (theaterId, theaterName, theaterRows, theaterColumns) => {

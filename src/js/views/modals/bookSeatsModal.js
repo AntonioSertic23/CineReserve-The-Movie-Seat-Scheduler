@@ -5,7 +5,7 @@ class bookSeatsModal extends Modal {
   bookSeatsModalContent = (theaterName, theaterMovie) => {
     return `
     <div id='book-seats-form'>
-      <p>${theaterName} - <b>${theaterMovie}</b></p>
+      <p>${theaterName} - <b>${theaterMovie.title}</b></p>
       <div class="parent-container">
         <ul class="showcase">
           <li>

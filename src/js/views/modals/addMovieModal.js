@@ -52,10 +52,16 @@ class addMovieModal extends Modal {
           const movieTitle = movieElement.querySelector(".movie-title").innerText;
           const movieYear = movieElement.querySelector(".year-title").innerText;
 
+          const movie = {
+            title: movieTitle,
+            year: movieYear,
+            image: movieImage,
+          };
+
           const parentTheaterElement = event.target.closest(".theater");
           const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
 
-          resolve([theaterId, movieTitle]);
+          resolve([theaterId, movie]);
           this.close();
         })
       );

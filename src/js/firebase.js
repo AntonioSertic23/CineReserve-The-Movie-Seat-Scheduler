@@ -145,7 +145,6 @@ export const getAllTheaters = async () => {
     }
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
 
@@ -160,7 +159,6 @@ export const createTheater = async (theaterData) => {
       });
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
 
@@ -175,19 +173,19 @@ export const deleteTheater = async (theaterId) => {
       });
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
 
-export const updateMovie = async (theaterId, movieName) => {
+export const updateMovie = async (theaterId, movie) => {
   try {
     const updates = {};
-    updates["/theaters/" + theaterId + "/movie"] = movieName;
+    updates["/theaters/" + theaterId + "/movie/title"] = movie.title;
+    updates["/theaters/" + theaterId + "/movie/year"] = movie.year;
+    updates["/theaters/" + theaterId + "/movie/image"] = movie.image;
 
     return update(dbRef, updates);
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
 
@@ -201,7 +199,6 @@ export const editTheater = async (theaterId, theaterName, theaterRows, theaterCo
     return update(dbRef, updates);
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
 
@@ -213,6 +210,5 @@ export const bookSeats = async (theaterId, seatsList) => {
     return update(dbRef, updates);
   } catch (error) {
     await errorModal.open(`${error}`);
-    alert(error);
   }
 };
