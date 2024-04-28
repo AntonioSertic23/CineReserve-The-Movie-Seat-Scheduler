@@ -3,7 +3,11 @@
     {
       "columns": 3,
       "id": 0,
-      "movie": "The Lion King 2: Simba's Pride",
+      "movie": {
+        "image": "https://m.media-amazon.com/images/M/MV5BOTlhYTVkMDktYzIyNC00NzlkLTlmN2ItOGEyMWQ4OTA2NDdmXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SX300.jpg",
+        "title": "Men in Black",
+        "year": "1997"
+      },
       "name": "Theater 3",
       "rows": 3,
       "seats": [
@@ -18,13 +22,21 @@
         {
           "x": 0,
           "y": 1
+        },
+        {
+          "x": 0,
+          "y": 2
         }
       ]
     },
     {
       "columns": "6",
       "id": 1,
-      "movie": "Shrek 5",
+      "movie": {
+        "image": "https://m.media-amazon.com/images/M/MV5BMTM4Mjg5ODEzMV5BMl5BanBnXkFtZTcwMDc3NDk0NA@@._V1_SX300.jpg",
+        "title": "Mad Max",
+        "year": "1979"
+      },
       "name": "Theater 6",
       "rows": "6",
       "seats": [
@@ -43,8 +55,38 @@
         {
           "x": 0,
           "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 2
         }
       ]
+    },
+    {
+      "columns": "7",
+      "id": 2,
+      "movie": {
+        "image": "https://m.media-amazon.com/images/M/MV5BMDJhMGRjN2QtNDUxYy00NGM3LThjNGQtMmZiZTRhNjM4YzUxL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+        "title": "Shrek 2",
+        "year": "2004"
+      },
+      "name": "Theater 7",
+      "rows": "7"
+    },
+    {
+      "columns": 12,
+      "id": 3,
+      "movie": {
+        "image": "https://m.media-amazon.com/images/M/MV5BMjE5NDQ5OTE4Ml5BMl5BanBnXkFtZTcwOTE3NDIzMw@@._V1_SX300.jpg",
+        "title": "Star Trek",
+        "year": "2009"
+      },
+      "name": "Theater 21",
+      "rows": 7
     }
   ]
 }

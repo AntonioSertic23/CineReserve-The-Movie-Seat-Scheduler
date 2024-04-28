@@ -5,7 +5,7 @@ class bookSeatsModal extends Modal {
   bookSeatsModalContent = (theaterName, theaterMovie) => {
     return `
     <div id='book-seats-form'>
-      <p>${theaterName} - <b>${theaterMovie}</b></p>
+      <p>${theaterName} - <b>${theaterMovie.title}</b></p>
       <div class="parent-container">
         <ul class="showcase">
           <li>
@@ -35,6 +35,7 @@ class bookSeatsModal extends Modal {
     this.show("Book Seats", this.bookSeatsModalContent(theater.name, theater.movie));
 
     let seatsList = theater.seats || [];
+    const originalSeatsList = theater.seats ? theater.seats.length : 0;
 
     const theaterContainer = document.getElementById("theater-container");
 
@@ -86,11 +87,11 @@ class bookSeatsModal extends Modal {
       confirmElement.parentNode.replaceChild(newConfirmElement, confirmElement);
 
       newConfirmElement.addEventListener("click", () => {
-        if (seatsList.length) {
+        if (seatsList.length && seatsList.length > originalSeatsList) {
           this.close();
           resolve([theater.id, seatsList]); // Resolve the promise when the user clicks confirm
         } else {
-          this.showErrorMessage('<p class="error-message">You must select at least one seat.</p>');
+          this.showErrorMessage("You must select at least one seat.");
         }
       });
     });

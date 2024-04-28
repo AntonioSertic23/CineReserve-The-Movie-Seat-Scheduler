@@ -29,3 +29,8 @@ export const AJAX = async (url, uploadData = undefined) => {
     alert(err);
   }
 };
+
+export const renderSpinner = (parentElement, margin = "auto") => {
+  const markup = `<div class="spinner" style="margin: ${margin}"></div>`;
+  parentElement.innerHTML = markup;
+};

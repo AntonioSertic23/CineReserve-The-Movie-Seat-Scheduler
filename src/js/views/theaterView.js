@@ -36,11 +36,17 @@ class TheaterView {
   _generateAdminMarkupTheater(theater) {
     return `
       <div class="theater" data-theater-id="${theater.id}">
+        <div class="movie-info">
+          <div class="image-container">
+            <img id="movieImage-${theater.id}" src="${theater.movie.image}" />
+          </div>
+          <p>Movie: <b id="movieName-${theater.id}">${theater.movie.title}</b></p>
+          <p>Year: <b id="movieYear-${theater.id}">${theater.movie.year}</b></p>
+        </div>
         <p>Name: <b id="theaterName-${theater.id}">${theater.name}</b></p>
-        <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
         <p>Rows: <b id="theaterRows-${theater.id}">${theater.rows}</b></p>
         <p>Columns: <b id="theaterColumns-${theater.id}">${theater.columns}</b></p>
-        ${theater.movie != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
+        ${theater.movie.title != "-" ? "<button class='theater-change-movie'>Change Movie</button>" : "<button class='theater-add-movie'>Add Movie</button>"}
         <button class="theater-edit-theater">Edit Theater</button>
         <button class="theater-delete-theater">Delete Theater</button>
       </div>
@@ -51,8 +57,14 @@ class TheaterView {
     return `
       <div class="theater" data-theater-id="${theater.id}">
         <p>Name: <b id="theaterName-${theater.id}">${theater.name}</b></p>
-        <p>Movie: <b id="movieName-${theater.id}">${theater.movie}</b></p>
-        ${theater.movie != "-" ? "<button class='theater-book-seats'>Book Seats</button>" : ""}
+        <div class="movie-info">
+          <div class="image-container">
+            <img id="movieImage-${theater.id}" src="${theater.movie.image}" />
+          </div>
+          <p>Movie: <b id="movieName-${theater.id}">${theater.movie.title}</b></p>
+          <p>Year: <b id="movieYear-${theater.id}">${theater.movie.year}</b></p>
+        </div>
+        ${theater.movie.title != "-" ? "<button class='theater-book-seats'>Book Seats</button>" : ""}
       </div>
       `;
   }
@@ -66,7 +78,11 @@ class TheaterView {
 
         const data = {
           name: theaterName,
-          movie: "-",
+          movie: {
+            title: "-",
+            year: "-",
+            image: "-",
+          },
           rows: parseInt(theaterRows),
           columns: parseInt(theaterColumns),
           seats: [],
@@ -74,7 +90,7 @@ class TheaterView {
 
         handler(data);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }
@@ -86,7 +102,7 @@ class TheaterView {
 
         handler(theaterId);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }
@@ -94,11 +110,11 @@ class TheaterView {
   addHandlerAddMovie(addMovieButton, handler) {
     addMovieButton.addEventListener("click", async (event) => {
       try {
-        const [theaterId, movieName] = await addMovieModal.open(event);
+        const [theaterId, movie] = await addMovieModal.open(event);
 
-        handler(theaterId, movieName);
+        handler(theaterId, movie);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }
@@ -106,11 +122,11 @@ class TheaterView {
   addHandlerChangeMovie(changeMovieButton, handler) {
     changeMovieButton.addEventListener("click", async (event) => {
       try {
-        const [theaterId, movieName] = await changeMovieModal.open(event);
+        const [theaterId, movie] = await changeMovieModal.open(event);
 
-        handler(theaterId, movieName);
+        handler(theaterId, movie);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }
@@ -122,7 +138,7 @@ class TheaterView {
 
         handler(theaterId, theaterName, theaterRows, theaterColumns);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }
@@ -134,7 +150,7 @@ class TheaterView {
 
         handler(theaterId, seatsList);
       } catch (error) {
-        alert("An error has occurred.", error);
+        alert(error);
       }
     });
   }

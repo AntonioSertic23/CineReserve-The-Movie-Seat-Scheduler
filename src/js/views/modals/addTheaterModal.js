@@ -96,7 +96,7 @@ class addTheaterModal extends Modal {
           this.close();
           resolve([nameInput.value, rowsInput.value, columnsInput.value]); // Resolve the promise when the user clicks confirm
         } else {
-          this.showErrorMessage('<p class="error-message">All fields must be filled in.</p>');
+          this.showErrorMessage("All fields must be filled in.");
         }
       });
     });

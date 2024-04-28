@@ -40,15 +40,17 @@ const controlDeleteTheater = (theaterId) => {
   document.getElementById("all-theaters").querySelector(`[data-theater-id="${theaterId}"]`).remove();
 };
 
-const controlAddMovie = (theaterId, movieName) => {
+const controlAddMovie = (theaterId, movie) => {
   // Update state
-  theaterModel.updateMovie(theaterId, movieName);
+  theaterModel.updateMovie(theaterId, movie);
 
   // Update firebase
-  firebase.updateMovie(theaterId, movieName);
+  firebase.updateMovie(theaterId, movie);
 
   // Update UI
-  document.getElementById(`movieName-${theaterId}`).textContent = movieName;
+  document.getElementById(`movieName-${theaterId}`).textContent = movie.title;
+  document.getElementById(`movieYear-${theaterId}`).textContent = movie.year;
+  document.getElementById(`movieImage-${theaterId}`).setAttribute("src", movie.image);
 
   // Change to Change Movie
   // Remove previous event listener and add a new one
@@ -62,15 +64,17 @@ const controlAddMovie = (theaterId, movieName) => {
   newAddMovieButton.textContent = "Change Movie";
 };
 
-const controlChangeMovie = (theaterId, movieName) => {
+const controlChangeMovie = (theaterId, movie) => {
   // Update state
-  theaterModel.updateMovie(theaterId, movieName);
+  theaterModel.updateMovie(theaterId, movie);
 
   // Update firebase
-  firebase.updateMovie(theaterId, movieName);
+  firebase.updateMovie(theaterId, movie);
 
   // Update UI
-  document.getElementById(`movieName-${theaterId}`).textContent = movieName;
+  document.getElementById(`movieName-${theaterId}`).textContent = movie.title;
+  document.getElementById(`movieYear-${theaterId}`).textContent = movie.year;
+  document.getElementById(`movieImage-${theaterId}`).setAttribute("src", movie.image);
 };
 
 const controlEditTheater = (theaterId, theaterName, theaterRows, theaterColumns) => {
