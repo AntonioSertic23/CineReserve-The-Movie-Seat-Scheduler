@@ -1,7 +1,17 @@
 import { Modal } from "./modal.js";
 import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../../config.js";
 
-class editTheaterModal extends Modal {
+/**
+ * Represents a modal for editing theater details.
+ */
+class EditTheaterModal extends Modal {
+  /**
+   * Generates the content for the edit theater modal.
+   * @param {string} theaterName - The name of the theater.
+   * @param {number} theaterRows - The number of rows in the theater.
+   * @param {number} theaterColumns - The number of columns in the theater.
+   * @returns {string} - The HTML content for the modal.
+   */
   editTheaterModalContent = (theaterName, theaterRows, theaterColumns) => {
     return `
     <div id="edit-theater-form">
@@ -32,6 +42,11 @@ class editTheaterModal extends Modal {
     `;
   };
 
+  /**
+   * Opens the edit theater modal.
+   * @param {Event} event - The event triggering the modal opening.
+   * @returns {Promise} - A promise that resolves with the updated theater details when confirmed.
+   */
   open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
@@ -108,4 +123,4 @@ class editTheaterModal extends Modal {
   };
 }
 
-export default new editTheaterModal();
+export default new EditTheaterModal();

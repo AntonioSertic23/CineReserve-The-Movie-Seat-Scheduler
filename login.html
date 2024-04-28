@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Define document character set and viewport -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Link CSS stylesheets -->
     <link rel="stylesheet" href="./src/css/login.css" />
     <link rel="stylesheet" href="./src/css/modal.css" />
     <link rel="stylesheet" href="./src/css/spinner.css" />
+    <!-- Import JavaScript module -->
     <script type="module" src="./src/js/controllers/userController.js"></script>
+    <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Link Google Fonts stylesheet -->
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <!-- Set document title -->
     <title>Login / Sign up</title>
   </head>
   <body>
+    <!-- Header section -->
     <header>
+      <!-- Application title -->
       <h1>Login / Sign up</h1>
     </header>
 
+    <!-- Main content container -->
     <div id="main" class="container">
+      <!-- Login and sign up form -->
       <form id="loginForm">
         <div class="row">
           <label for="email">Email:</label>
@@ -29,25 +39,36 @@
           <input type="password" id="password" name="password" required />
         </div>
 
+        <!-- Spinner container for loading indicator -->
         <div id="spinner-container"></div>
 
+        <!-- Form actions -->
         <div class="form-actions">
+          <!-- Login and sign up buttons -->
           <button id="loginButton">Login</button>
           <button id="signupButton">Sign up</button>
         </div>
       </form>
     </div>
 
+    <!-- Modal container -->
     <div id="modalContainer" class="modal-container">
+      <!-- Modal dialog -->
       <div class="modal">
+        <!-- Modal header -->
         <div class="modal-header">
+          <!-- Modal title -->
           <h2 id="modalTitle"></h2>
+          <!-- Close button -->
           <span class="close-btn">&times;</span>
         </div>
         <hr />
+        <!-- Modal body -->
         <div class="modal-body" id="modalBody"></div>
         <hr />
+        <!-- Modal footer -->
         <div class="modal-footer">
+          <!-- Cancel and confirm buttons -->
           <button class="close-modal">Cancel</button>
           <button id="save-changes-modal">Confirm</button>
         </div>

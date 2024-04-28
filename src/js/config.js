@@ -5,6 +5,7 @@ export const FIREBASE_CONFIG = {
   storageBucket: "",
   messagingSenderId: "",
   appId: "",
+  databaseURL: "",
 };
 
 export const API_URL = "https://www.omdbapi.com/";

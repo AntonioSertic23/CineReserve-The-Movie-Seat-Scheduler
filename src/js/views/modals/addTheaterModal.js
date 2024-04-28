@@ -1,7 +1,13 @@
 import { Modal } from "./modal.js";
 import { MIN_ROWS_COLUMNS, MAX_ROWS_COLUMNS } from "../../config.js";
 
-class addTheaterModal extends Modal {
+/**
+ * Represents a modal for adding a new theater.
+ */
+class AddTheaterModal extends Modal {
+  /**
+   * The HTML content for the add theater modal.
+   */
   addTheaterModalContent = `
     <div id="add-theater-form">
       <label for="theater-name">Name:</label>
@@ -30,6 +36,10 @@ class addTheaterModal extends Modal {
     </div>
     `;
 
+  /**
+   * Opens the add theater modal.
+   * @returns {Promise} - A promise that resolves with theater details when confirmed.
+   */
   open = async () => {
     this.show("Add Theater", this.addTheaterModalContent);
 
@@ -37,7 +47,7 @@ class addTheaterModal extends Modal {
     const rowsInput = document.getElementById("theater-rows");
     const columnsInput = document.getElementById("theater-columns");
 
-    // Generate theater seating based on specified rows and columns
+    // Generates theater seating based on specified rows and columns
     const generateTheaterSeats = (rows, columns) => {
       // Ensure rows and columns values stay within configured bounds
       rows = Math.max(Math.min(rows, MAX_ROWS_COLUMNS), MIN_ROWS_COLUMNS);
@@ -69,7 +79,7 @@ class addTheaterModal extends Modal {
       }
     };
 
-    // Add event listeners for rows and columns input changes
+    // Adds event listeners for rows and columns input changes
     [rowsInput, columnsInput].forEach((input) =>
       input.addEventListener("change", () => {
         const rowsValue = parseInt(rowsInput.value);
@@ -80,13 +90,13 @@ class addTheaterModal extends Modal {
 
     if (rowsInput.value && columnsInput.value) generateTheaterSeats(rowsInput.value, columnsInput.value);
 
-    // Return a promise that resolves when the user clicks confirm
+    // Returns a promise that resolves when the user clicks confirm
     return new Promise((resolve, reject) => {
       const nameInput = document.getElementById("theater-name");
       const rowsInput = document.getElementById("theater-rows");
       const columnsInput = document.getElementById("theater-columns");
 
-      // Remove previous event listener and add a new one for confirm button
+      // Removes previous event listener and adds a new one for confirm button
       const confirmElement = document.getElementById("save-changes-modal");
       const newConfirmElement = confirmElement.cloneNode(true);
       confirmElement.parentNode.replaceChild(newConfirmElement, confirmElement);
@@ -94,7 +104,7 @@ class addTheaterModal extends Modal {
       newConfirmElement.addEventListener("click", () => {
         if (nameInput.value && rowsInput.value && columnsInput.value) {
           this.close();
-          resolve([nameInput.value, rowsInput.value, columnsInput.value]); // Resolve the promise when the user clicks confirm
+          resolve([nameInput.value, rowsInput.value, columnsInput.value]); // Resolves the promise when the user clicks confirm
         } else {
           this.showErrorMessage("All fields must be filled in.");
         }
@@ -103,4 +113,4 @@ class addTheaterModal extends Modal {
   };
 }
 
-export default new addTheaterModal();
+export default new AddTheaterModal();
