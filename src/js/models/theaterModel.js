@@ -5,7 +5,7 @@ export const loadTheater = async (theaters) => {
 };
 
 export const getTheater = (theaterId) => {
-  return state.find((theater) => theater.id === theaterId);
+  return state.find((theater) => theater?.id === theaterId);
 };
 
 export const getNextTheaterId = () => {
@@ -21,22 +21,22 @@ export const addTheater = async (theater) => {
 };
 
 export const deleteTheater = (theaterId) => {
-  state = state.filter((theater) => theater.id !== theaterId);
+  state = state.filter((theater) => theater?.id !== theaterId);
 };
 
 export const updateMovie = (theaterId, movieName) => {
-  const theater = state.find((theater) => theater.id === theaterId);
+  const theater = state.find((theater) => theater?.id === theaterId);
   theater.movie = movieName;
 };
 
 export const editTheater = (theaterId, theaterName, theaterRows, theaterColumns) => {
-  const theater = state.find((theater) => theater.id === theaterId);
+  const theater = state.find((theater) => theater?.id === theaterId);
   theater.name = theaterName;
   theater.rows = theaterRows;
   theater.columns = theaterColumns;
 };
 
 export const bookSeats = (theaterId, seatsList) => {
-  const theater = state.find((theater) => theater.id === theaterId);
+  const theater = state.find((theater) => theater?.id === theaterId);
   theater.seats = seatsList;
 };

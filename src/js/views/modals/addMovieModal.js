@@ -16,7 +16,7 @@ class addMovieModal extends Modal {
     `;
   };
 
-  seachMovies = async (search) => {
+  seachMovies = async (search, event, resolve) => {
     try {
       this.clearErrorMessage();
       const searchresultsContainer = document.getElementById("search-results-container");
@@ -47,8 +47,16 @@ class addMovieModal extends Modal {
       addButtons.forEach((btn) =>
         btn.addEventListener("click", () => {
           const movieElement = btn.closest(".movie");
-          const titleElement = movieElement.querySelector(".movie-title");
-          document.getElementById("movie-title").value = titleElement.innerText;
+
+          const movieImage = movieElement.querySelector("img").getAttribute("src");
+          const movieTitle = movieElement.querySelector(".movie-title").innerText;
+          const movieYear = movieElement.querySelector(".year-title").innerText;
+
+          const parentTheaterElement = event.target.closest(".theater");
+          const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+
+          resolve([theaterId, movieTitle]);
+          this.close();
         })
       );
     } catch (error) {
@@ -64,7 +72,7 @@ class addMovieModal extends Modal {
       </div>
       <div class="right">
         <p>Title: <b class="movie-title">${movie.title}</b></p>
-        <p>Year: <b>${movie.year}</b></p>
+        <p>Year: <b class="year-title">${movie.year}</b></p>
         <button class="add-button">Add</button>
       </div>
     </div>
@@ -72,32 +80,12 @@ class addMovieModal extends Modal {
   };
 
   open = async (event) => {
-    this.show("Add Movie", this.addMovieModalContent());
-
-    const parentTheaterElement = event.target.closest(".theater");
-    const addMovieTitle = document.getElementById("movie-title");
-    const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
+    this.show("Add Movie", this.addMovieModalContent(), false);
 
     const searchMoviesButton = document.getElementById("search-movies");
     const movieTitle = document.getElementById("movie-title");
-    searchMoviesButton.addEventListener("click", async () => await this.seachMovies(movieTitle.value));
-    // TODO: Add a spinner to rotate while the search is executing
-
-    // Return a promise that resolves when the user clicks confirm
     return new Promise((resolve) => {
-      // Remove previous event listener and add a new one for confirm button
-      const confirmElement = document.getElementById("save-changes-modal");
-      const newConfirmElement = confirmElement.cloneNode(true);
-      confirmElement.parentNode.replaceChild(newConfirmElement, confirmElement);
-
-      newConfirmElement.addEventListener("click", () => {
-        if (addMovieTitle.value) {
-          this.close();
-          resolve([theaterId, addMovieTitle.value]); // Resolve the promise when the user clicks confirm
-        } else {
-          this.showErrorMessage("The movie title is a required field.");
-        }
-      });
+      searchMoviesButton.addEventListener("click", async () => await this.seachMovies(movieTitle.value, event, resolve));
     });
   };
 }

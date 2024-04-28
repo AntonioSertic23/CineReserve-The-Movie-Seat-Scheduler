@@ -35,7 +35,7 @@ class bookSeatsModal extends Modal {
     this.show("Book Seats", this.bookSeatsModalContent(theater.name, theater.movie));
 
     let seatsList = theater.seats || [];
-    const originalSeatsList = theater.seats.length;
+    const originalSeatsList = theater.seats ? theater.seats.length : 0;
 
     const theaterContainer = document.getElementById("theater-container");
 

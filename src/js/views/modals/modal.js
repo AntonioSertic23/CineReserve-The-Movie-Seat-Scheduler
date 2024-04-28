@@ -1,10 +1,24 @@
 export class Modal {
   constructor() {}
 
-  show = (title, content) => {
+  show = (title, content, showConfirmButton = true) => {
     // Set modal title and content
     document.getElementById("modalTitle").innerText = title;
     document.getElementById("modalBody").innerHTML = content;
+
+    const modalFooter = document.querySelector(".modal-footer");
+    let confirmButton = document.getElementById("save-changes-modal");
+
+    if (!confirmButton) {
+      confirmButton = document.createElement("button");
+      confirmButton.setAttribute("id", "save-changes-modal");
+      confirmButton.textContent = "Confirm";
+      modalFooter.appendChild(confirmButton);
+    }
+
+    if (!showConfirmButton) {
+      confirmButton.remove();
+    }
 
     // Add event listeners for closing modal
     const closeModalElements = document.querySelectorAll(".close-modal, .close-btn");
