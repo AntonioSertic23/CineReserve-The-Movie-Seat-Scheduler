@@ -2,7 +2,14 @@ import { Modal } from "./modal.js";
 import { AJAX, renderSpinner } from "../../helpers.js";
 import { API_URL, API_KEY } from "../../config.js";
 
-class addMovieModal extends Modal {
+/**
+ * Represents a modal for adding a new movie.
+ */
+class AddMovieModal extends Modal {
+  /**
+   * Generates the content for the add movie modal.
+   * @returns {string} - The HTML content for the modal.
+   */
   addMovieModalContent = () => {
     return `
     <div id='add-movie-form'>
@@ -16,16 +23,22 @@ class addMovieModal extends Modal {
     `;
   };
 
-  seachMovies = async (search, event, resolve) => {
+  /**
+   * Searches for movies based on the provided search term.
+   * @param {string} search - The search term.
+   * @param {Event} event - The event triggering the search.
+   * @param {Function} resolve - The callback function to resolve the promise.
+   */
+  searchMovies = async (search, event, resolve) => {
     try {
       this.clearErrorMessage();
-      const searchresultsContainer = document.getElementById("search-results-container");
+      const searchResultsContainer = document.getElementById("search-results-container");
       const margin = "50px auto 50px 95%";
-      renderSpinner(searchresultsContainer, margin);
+      renderSpinner(searchResultsContainer, margin);
 
       const data = await AJAX(`${API_URL}?s=${search}&type=movie&apikey=${API_KEY}`);
 
-      searchresultsContainer.innerHTML = "";
+      searchResultsContainer.innerHTML = "";
       if (data.Error) {
         this.showErrorMessage(`No movies found with that name.`);
         return;
@@ -41,9 +54,9 @@ class addMovieModal extends Modal {
       });
 
       const markup = `${results.map(this.generateMarkupSearchMovie).join("")}`;
-      searchresultsContainer.insertAdjacentHTML("afterbegin", markup);
+      searchResultsContainer.insertAdjacentHTML("afterbegin", markup);
 
-      const addButtons = searchresultsContainer.querySelectorAll(".add-button");
+      const addButtons = searchResultsContainer.querySelectorAll(".add-button");
       addButtons.forEach((btn) =>
         btn.addEventListener("click", () => {
           const movieElement = btn.closest(".movie");
@@ -70,6 +83,11 @@ class addMovieModal extends Modal {
     }
   };
 
+  /**
+   * Generates the markup for a search result movie.
+   * @param {Object} movie - The movie object.
+   * @returns {string} - The HTML markup for the movie.
+   */
   generateMarkupSearchMovie = (movie) => {
     return `
     <div class="movie" data-movie-id="${movie.id}">
@@ -85,15 +103,20 @@ class addMovieModal extends Modal {
     `;
   };
 
+  /**
+   * Opens the add movie modal.
+   * @param {Event} event - The event triggering the modal opening.
+   * @returns {Promise} - A promise that resolves when the modal is closed.
+   */
   open = async (event) => {
     this.show("Add Movie", this.addMovieModalContent(), false);
 
     const searchMoviesButton = document.getElementById("search-movies");
     const movieTitle = document.getElementById("movie-title");
     return new Promise((resolve) => {
-      searchMoviesButton.addEventListener("click", async () => await this.seachMovies(movieTitle.value, event, resolve));
+      searchMoviesButton.addEventListener("click", async () => await this.searchMovies(movieTitle.value, event, resolve));
     });
   };
 }
 
-export default new addMovieModal();
+export default new AddMovieModal();

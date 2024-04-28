@@ -1,7 +1,16 @@
 import { Modal } from "./modal.js";
 import { getTheater } from "../../models/theaterModel.js";
 
-class bookSeatsModal extends Modal {
+/**
+ * Represents a modal for booking seats in a theater.
+ */
+class BookSeatsModal extends Modal {
+  /**
+   * Generates the content for the book seats modal.
+   * @param {string} theaterName - The name of the theater.
+   * @param {Object} theaterMovie - The movie being shown in the theater.
+   * @returns {string} - The HTML content for the modal.
+   */
   bookSeatsModalContent = (theaterName, theaterMovie) => {
     return `
     <div id='book-seats-form'>
@@ -27,6 +36,11 @@ class bookSeatsModal extends Modal {
     `;
   };
 
+  /**
+   * Opens the book seats modal.
+   * @param {Event} event - The event triggering the modal opening.
+   * @returns {Promise} - A promise that resolves with theater ID and selected seats when confirmed.
+   */
   open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
@@ -98,4 +112,4 @@ class bookSeatsModal extends Modal {
   };
 }
 
-export default new bookSeatsModal();
+export default new BookSeatsModal();

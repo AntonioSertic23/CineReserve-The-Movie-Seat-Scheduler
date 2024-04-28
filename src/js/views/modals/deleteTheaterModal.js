@@ -1,6 +1,14 @@
 import { Modal } from "./modal.js";
 
-class deleteTheaterModal extends Modal {
+/**
+ * Represents a modal for deleting a theater.
+ */
+class DeleteTheaterModal extends Modal {
+  /**
+   * Generates the content for the delete theater modal.
+   * @param {string} theaterName - The name of the theater to be deleted.
+   * @returns {string} - The HTML content for the modal.
+   */
   deleteTheaterModalContent = (theaterName) => {
     return `
     <div id="edit-theater-form">
@@ -9,6 +17,11 @@ class deleteTheaterModal extends Modal {
     `;
   };
 
+  /**
+   * Opens the delete theater modal.
+   * @param {Event} event - The event triggering the modal opening.
+   * @returns {Promise} - A promise that resolves with the ID of the theater to be deleted when confirmed.
+   */
   open = async (event) => {
     const parentTheaterElement = event.target.closest(".theater");
     const theaterId = parseInt(parentTheaterElement.dataset.theaterId);
@@ -31,4 +44,4 @@ class deleteTheaterModal extends Modal {
   };
 }
 
-export default new deleteTheaterModal();
+export default new DeleteTheaterModal();

@@ -3,6 +3,10 @@ import * as userModel from "../models/userModel.js";
 import * as theaterModel from "../models/theaterModel.js";
 import theaterView from "../views/theaterView.js";
 
+/**
+ * Controls the addition of a new theater.
+ * @param {Object} theater - The theater object to be added.
+ */
 const controlAddTheater = (theater) => {
   // Update state
   const nextTheaterId = theaterModel.getNextTheaterId();
@@ -29,6 +33,10 @@ const controlAddTheater = (theater) => {
   theaterView.addHandlerEditTheater(editTheaterButton, controlEditTheater);
 };
 
+/**
+ * Controls the deletion of a theater.
+ * @param {number} theaterId - The ID of the theater to be deleted.
+ */
 const controlDeleteTheater = (theaterId) => {
   // Update state
   theaterModel.deleteTheater(theaterId);
@@ -40,6 +48,11 @@ const controlDeleteTheater = (theaterId) => {
   document.getElementById("all-theaters").querySelector(`[data-theater-id="${theaterId}"]`).remove();
 };
 
+/**
+ * Controls the addition of a movie to a theater.
+ * @param {number} theaterId - The ID of the theater where the movie is added.
+ * @param {Object} movie - The movie object to be added.
+ */
 const controlAddMovie = (theaterId, movie) => {
   // Update state
   theaterModel.updateMovie(theaterId, movie);
@@ -64,6 +77,11 @@ const controlAddMovie = (theaterId, movie) => {
   newAddMovieButton.textContent = "Change Movie";
 };
 
+/**
+ * Controls the changing of a movie in a theater.
+ * @param {number} theaterId - The ID of the theater where the movie is changed.
+ * @param {Object} movie - The new movie object.
+ */
 const controlChangeMovie = (theaterId, movie) => {
   // Update state
   theaterModel.updateMovie(theaterId, movie);
@@ -77,6 +95,13 @@ const controlChangeMovie = (theaterId, movie) => {
   document.getElementById(`movieImage-${theaterId}`).setAttribute("src", movie.image);
 };
 
+/**
+ * Controls the editing of theater details.
+ * @param {number} theaterId - The ID of the theater to be edited.
+ * @param {string} theaterName - The new name of the theater.
+ * @param {number} theaterRows - The new number of rows in the theater.
+ * @param {number} theaterColumns - The new number of columns in the theater.
+ */
 const controlEditTheater = (theaterId, theaterName, theaterRows, theaterColumns) => {
   // Update state
   theaterModel.editTheater(theaterId, theaterName, theaterRows, theaterColumns);
@@ -90,6 +115,11 @@ const controlEditTheater = (theaterId, theaterName, theaterRows, theaterColumns)
   document.getElementById(`theaterColumns-${theaterId}`).textContent = theaterColumns;
 };
 
+/**
+ * Controls the booking of seats in a theater.
+ * @param {number} theaterId - The ID of the theater where seats are booked.
+ * @param {Array} seatsList - List of seats to be booked.
+ */
 const controlBookSeats = (theaterId, seatsList) => {
   // Update state
   theaterModel.bookSeats(theaterId, seatsList);
@@ -98,6 +128,9 @@ const controlBookSeats = (theaterId, seatsList) => {
   firebase.bookSeats(theaterId, seatsList);
 };
 
+/**
+ * Initializes the application.
+ */
 const init = async () => {
   const user = await firebase.getLoggedInUser();
 

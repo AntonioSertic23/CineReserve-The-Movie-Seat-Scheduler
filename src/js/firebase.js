@@ -5,15 +5,18 @@ import { FIREBASE_CONFIG, ADMIN_ID, TIMEOUT_SEC } from "./config.js";
 import errorModal from "./views/modals/errorModal.js";
 import { renderSpinner } from "./helpers.js";
 
-// Initialize Firebase with the provided configuration.
+// Initializes the Firebase application with the provided configuration.
 initializeApp(FIREBASE_CONFIG);
 
+// Reference to the root of the Firebase database.
 const dbRef = ref(getDatabase());
 
-// Get the authentication instance.
+// Authentication instance.
 const AUTH = getAuth();
 
-// Check the authentication status and handle redirection if necessary.
+/**
+ * Checks the authentication status and redirects the user if necessary.
+ */
 onAuthStateChanged(AUTH, async (user) => {
   try {
     if (user) {
@@ -33,7 +36,7 @@ onAuthStateChanged(AUTH, async (user) => {
 });
 
 /**
- * Function to log in a user with email and password.
+ * Logs in a user with email and password.
  * @param {string} email - User's email.
  * @param {string} password - User's password.
  */
@@ -51,7 +54,7 @@ export const logIn = async (email, password) => {
 };
 
 /**
- * Function to sign up a new user with email and password.
+ * Signs up a new user with email and password.
  * @param {string} email - User's email.
  * @param {string} password - User's password.
  */
@@ -75,7 +78,9 @@ export const signUp = async (email, password) => {
   }
 };
 
-// Function to log out the current user.
+/**
+ * Logs out the current user.
+ */
 export const logOut = async () => {
   try {
     await signOut(AUTH);
@@ -85,7 +90,7 @@ export const logOut = async () => {
 };
 
 /**
- * A function that creates a promise to reject after a specified time period.
+ * Creates a promise to reject after a specified time period.
  * @param {number} seconds - The time in seconds before the promise rejects.
  * @returns {Promise} - A promise that rejects after the specified time.
  */
@@ -98,7 +103,7 @@ const timeout = (seconds) => {
 };
 
 /**
- * A function that returns a promise resolving with the current user's ID, or waits for the user to be authenticated.
+ * Returns a promise resolving with the current user's ID, or waits for the user to be authenticated.
  * @returns {Promise} - A promise resolving with the current user's ID.
  */
 const getUserIDPromise = () => {
@@ -117,7 +122,7 @@ const getUserIDPromise = () => {
 };
 
 /**
- * A function that determines the type of the logged-in user.
+ * Determines the type of the logged-in user.
  * @returns {Promise<string>} - A promise resolving with the type of the logged-in user ("admin" or "user").
  */
 export const getLoggedInUser = async () => {
@@ -134,6 +139,10 @@ export const getLoggedInUser = async () => {
   }
 };
 
+/**
+ * Retrieves all theaters from the database.
+ * @returns {Promise<object|null>} - A promise resolving with the theaters data or null if no data is available.
+ */
 export const getAllTheaters = async () => {
   try {
     const snapshot = await get(child(dbRef, "theaters"));
@@ -148,6 +157,10 @@ export const getAllTheaters = async () => {
   }
 };
 
+/**
+ * Creates a new theater in the database.
+ * @param {object} theaterData - Data of the theater to be created.
+ */
 export const createTheater = async (theaterData) => {
   try {
     set(child(dbRef, "theaters/" + theaterData.id), theaterData)
@@ -162,6 +175,10 @@ export const createTheater = async (theaterData) => {
   }
 };
 
+/**
+ * Deletes a theater from the database.
+ * @param {string} theaterId - ID of the theater to be deleted.
+ */
 export const deleteTheater = async (theaterId) => {
   try {
     remove(child(dbRef, "theaters/" + theaterId))
@@ -176,6 +193,11 @@ export const deleteTheater = async (theaterId) => {
   }
 };
 
+/**
+ * Updates movie information for a theater in the database.
+ * @param {string} theaterId - ID of the theater.
+ * @param {object} movie - Movie information to be updated.
+ */
 export const updateMovie = async (theaterId, movie) => {
   try {
     const updates = {};
@@ -189,6 +211,13 @@ export const updateMovie = async (theaterId, movie) => {
   }
 };
 
+/**
+ * Updates theater information in the database.
+ * @param {string} theaterId - ID of the theater.
+ * @param {string} theaterName - New name of the theater.
+ * @param {number} theaterRows - New number of rows in the theater.
+ * @param {number} theaterColumns - New number of columns in the theater.
+ */
 export const editTheater = async (theaterId, theaterName, theaterRows, theaterColumns) => {
   try {
     const updates = {};
@@ -202,6 +231,11 @@ export const editTheater = async (theaterId, theaterName, theaterRows, theaterCo
   }
 };
 
+/**
+ * Books seats in a theater.
+ * @param {string} theaterId - ID of the theater.
+ * @param {array} seatsList - List of seats to be booked.
+ */
 export const bookSeats = async (theaterId, seatsList) => {
   try {
     const updates = {};
