@@ -15,7 +15,7 @@ CineReserve is a web application designed to manage movie theaters, allowing use
 
 ## Technologies Used
 
-[![My Skills](https://skillicons.dev/icons?i=html,css,js,firebase)](https://skills.thijs.gg)
+[![My Skills](https://skillicons.dev/icons?i=html,css,js,firebase)](https://skillicons.dev)
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Firebase Realtime Database for data storage
